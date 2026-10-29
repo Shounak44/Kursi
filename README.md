@@ -6,11 +6,11 @@ A single-file, browser-based political drama / interactive story. It is 2:14 AM,
 
 No installs, no build step, no dependencies. Just one `kursi-game.html` file.
 
-### 🎮 [Play it live here](https://bitter-fire-505.linkyhost.com)
+### 🎮 [Play it live here](https://maroon-lissa-69.tiiny.site/)
 
 ## Play
 
-**Online:** open **https://bitter-fire-505.linkyhost.com** in any modern browser, on desktop or mobile.
+**Online:** open **https://maroon-lissa-69.tiiny.site/** in any modern browser, on desktop or mobile.
 
 **Locally:** download `kursi-game.html` and open it in any modern browser.
 
