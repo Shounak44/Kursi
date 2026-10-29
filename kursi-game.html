@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KURSI: The Night Before</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Fraunces:ital,wght@0,600;0,800;1,400&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0b0e17;--ink:#f1efe9;--mute:#8b90a3;--box:#151a29;--line:#262d45;--ac:#6b7190;--gold:#e8a43a}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5;-webkit-tap-highlight-color:transparent;overflow:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%}
+#fl{position:fixed;inset:0;background:#fff;opacity:0;transition:opacity .15s;pointer-events:none;z-index:7}
+body::after{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 40%,rgba(0,0,0,.78));pointer-events:none;z-index:3}
+body::before{content:"";position:fixed;inset:-50%;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");opacity:.07;mix-blend-mode:overlay;pointer-events:none;z-index:3;animation:grain .6s steps(4) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-30px,20px)}50%{transform:translate(20px,-40px)}75%{transform:translate(-10px,30px)}100%{transform:translate(0,0)}}
+#app{position:relative;z-index:2;max-width:820px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:calc(10px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+#top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+#chn{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#c9cbd6;text-shadow:0 1px 8px #000}
+#chn::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);margin-right:9px;box-shadow:0 0 10px var(--gold);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+#mt,#mn{font:inherit;font-size:.75rem;color:#c9cbd6;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:3px 12px;cursor:pointer;margin-left:6px;backdrop-filter:blur(4px)}
+#mt:hover,#mn:hover{border-color:var(--gold);color:#fff}
+#hud{display:flex;align-items:center;gap:7px;margin-top:9px;opacity:0;transition:opacity .6s}
+.lbl{font-size:.62rem;letter-spacing:.2em;color:var(--mute);margin-right:3px}
+.chip{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-size:.68rem;font-weight:800;border:2px solid var(--c,#6b7190);color:var(--c,#6b7190);background:rgba(0,0,0,.5);transition:all .5s;cursor:default}
+#ib{width:84px;height:6px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden;margin-left:auto}
+#ib i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#e0584f,#e8a43a 50%,#7bd88f);background-size:84px 100%;transition:width .7s}
+#stage{--sx:0px;position:relative;flex:1;min-height:0;z-index:1}
+#aura{position:absolute;bottom:-8%;left:50%;width:min(62vh,500px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--ac),transparent 66%);opacity:.3;filter:blur(8px);transform:translateX(calc(-50% + var(--sx)));transition:transform .6s,opacity .4s}
+#face{position:absolute;bottom:0;left:50%;height:100%;max-height:380px;aspect-ratio:5/6;color:var(--ac);transform:translateX(calc(-50% + var(--sx)));filter:drop-shadow(0 0 20px var(--ac)) drop-shadow(0 10px 14px rgba(0,0,0,.7))}
+#face.in{animation:enter .4s cubic-bezier(.2,.9,.3,1)}
+@keyframes enter{from{transform:translateX(calc(-50% + var(--sx) - 26px));opacity:0}to{transform:translateX(calc(-50% + var(--sx)));opacity:1}}
+#face svg{width:100%;height:100%;display:block;animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-5px)}}
+.ey{transform-box:fill-box;transform-origin:center;animation:blink 4.4s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.mo{transform-box:fill-box;transform-origin:center}
+#face.talk .mo{animation:talk .17s ease-in-out infinite alternate}
+@keyframes talk{from{transform:scaleY(1)}to{transform:scaleY(3.3) scaleX(.86)}}
+#box{position:relative;z-index:2;margin-top:-34px;padding:24px 22px 16px;min-height:148px;border-radius:18px;background:linear-gradient(180deg,rgba(18,22,40,.9),rgba(8,10,20,.95));border:1px solid rgba(255,255,255,.09);border-top:2px solid var(--ac);box-shadow:0 14px 40px rgba(0,0,0,.6),0 -12px 40px -22px var(--ac);backdrop-filter:blur(8px);transition:border-color .3s,box-shadow .3s}
+#who{position:absolute;top:-15px;left:18px;background:var(--ac);color:#0b0e17;font-weight:800;font-size:.74rem;letter-spacing:.15em;text-transform:uppercase;padding:4px 14px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.5);transition:background .3s;white-space:nowrap}
+#who:empty{display:none}
+#who small{font-weight:600;letter-spacing:.05em;opacity:.72;text-transform:none;margin-left:8px;font-size:.72rem}
+#ch{max-height:38vh;overflow:auto;padding-bottom:2px}
+#txt{font-size:clamp(1.04rem,2.3vw,1.26rem);line-height:1.55;min-height:3.1em;text-wrap:pretty}
+#txt.nar{font-family:Fraunces,Georgia,serif;font-style:italic;color:#d9dbe6}
+#hint{position:absolute;right:16px;bottom:9px;color:var(--ac);font-size:.9rem;animation:nudge 1s ease-in-out infinite}
+@keyframes nudge{0%,100%{opacity:.4;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}
+#ch button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;font-size:1.02rem;color:var(--ink);background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.22);border-radius:12px;padding:11px 14px;margin-top:9px;cursor:pointer;animation:pop .3s ease-out both;transition:background .15s,color .15s,transform .15s,border-color .15s}
+#ch button b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;background:rgba(255,255,255,.12)}
+#ch button:hover,#ch button:focus-visible{background:var(--ink);color:var(--bg);outline:none;transform:translateX(4px)}
+#ch button:hover b{background:rgba(0,0,0,.15)}
+@keyframes pop{from{transform:translateY(14px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+#bar{height:5px;background:rgba(255,255,255,.12);border-radius:3px;margin-top:12px;overflow:hidden}
+#bar i{display:block;height:100%;width:100%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+#bar.hot i{background:#e0584f;box-shadow:0 0 12px #e0584f}
+#toast{position:absolute;left:50%;top:86px;transform:translateX(-50%);background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.16);padding:6px 16px;border-radius:999px;font-weight:600;font-size:.88rem;opacity:0;transition:opacity .4s;pointer-events:none;z-index:6;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+#card{position:fixed;inset:0;z-index:4;display:none;flex-direction:column;justify-content:center;padding:28px max(22px,calc((100% - 560px)/2));overflow:auto;background:rgba(6,8,16,.9);backdrop-filter:blur(6px)}
+#card h1{font-family:Fraunces,Georgia,serif;font-size:2.2rem;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;animation:pop .8s ease-out}
+#card p{max-width:46ch}
+#card.big{align-items:center;text-align:center;background:radial-gradient(circle at 50% 45%,rgba(10,12,24,.5),rgba(4,5,10,.92))}
+#card.big h1{font-size:clamp(2.2rem,8vw,3.4rem)}
+.go{font:inherit;font-weight:700;background:var(--ink);color:var(--bg);border:0;border-radius:12px;padding:12px 24px;margin-top:16px;cursor:pointer;align-self:flex-start;transition:transform .15s,box-shadow .15s}
+.go:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,164,58,.35)}
+.big .go{align-self:center}
+.go.ghost{background:transparent;color:var(--ink);border:2px solid rgba(255,255,255,.5)}
+.cnum{font-family:Fraunces,Georgia,serif;font-size:clamp(5rem,22vw,9rem);font-weight:800;line-height:1;color:transparent;-webkit-text-stroke:2px var(--gold);animation:pop .8s ease-out}
+.ckick{letter-spacing:.3em;text-transform:uppercase;font-size:.72rem;color:var(--mute);margin:6px 0}
+.cline{height:2px;width:0;background:var(--gold);margin-top:14px;box-shadow:0 0 12px var(--gold);animation:ln 1.6s .3s forwards}
+@keyframes ln{to{width:min(240px,56%)}}
+.emb{width:84px;height:100px;color:var(--ec,var(--gold));filter:drop-shadow(0 0 18px var(--ec,var(--gold)));animation:float 4s ease-in-out infinite}
+.emb svg{width:100%;height:100%}
+#card h1.logo{font-size:clamp(3.4rem,15vw,6rem);letter-spacing:.14em;margin:6px 0 0;padding-left:.14em}
+.sub{letter-spacing:.5em;text-transform:uppercase;color:var(--mute);font-size:.75rem;margin-bottom:12px}
+.mu{color:var(--mute);font-size:.85rem}
+.pips{display:flex;gap:7px;margin:10px 0 4px}
+.pips i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--mute)}
+.pips i.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.rel{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center}
+.rel span{border:1px solid currentColor;border-radius:20px;padding:2px 12px;font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+#app.sk{animation:sk .5s}@keyframes sk{0%,100%{transform:none}20%{transform:translate(-8px,4px)}40%{transform:translate(7px,-5px)}60%{transform:translate(-5px,3px)}80%{transform:translate(4px,-2px)}}
+.it{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:rgba(255,255,255,.03);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:8px;cursor:pointer;transition:border-color .15s,background .15s}.it:hover{border-color:#6b7190}.it.on{border-color:#e8a43a;background:rgba(232,164,58,.16)}.it:disabled{opacity:.4;cursor:not-allowed}.go:disabled{opacity:.4}
+.dg{display:flex;gap:16px;margin:12px 0}.dg div{display:flex;flex-direction:column;align-items:center;gap:4px}.dg b{font-size:2.4rem;font-family:Fraunces,Georgia,serif}.dg button{font:inherit;color:var(--ink);background:var(--box);border:1px solid var(--line);border-radius:8px;width:48px;cursor:pointer}.cl{padding-left:18px;margin:6px 0 4px}
+@media (max-width:520px){#box{padding:22px 16px 14px;margin-top:-28px}#face{max-height:300px}#ib{width:60px}}
+.m-shock .ew{transform-box:fill-box;transform-origin:center;transform:scale(1.28)}
+.m-angry .ew{transform-box:fill-box;transform-origin:center;transform:scaleY(.72)}
+.m-sad .ew{transform-box:fill-box;transform-origin:center;transform:translateY(2px) scaleY(.88)}
+.m-shock .mo{transform:scale(.8,3.2)}
+#face:not(.talk) .m-smile .mo,#face:not(.talk) .m-smirk .mo{opacity:0}
+#face.talk .m-smile .sm,#face.talk .m-smirk .sm{opacity:0}
+.ea{width:min(300px,72vw);color:var(--ec,var(--gold));filter:drop-shadow(0 0 16px var(--ec,var(--gold)));animation:pop .9s ease-out}.ea svg{width:100%;display:block}
+#menu{position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;background:rgba(4,5,10,.82);backdrop-filter:blur(8px)}
+.mp{width:min(460px,92vw);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#151a2c,#0c0f1c);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-shadow:0 24px 70px rgba(0,0,0,.7)}
+.mp h2{margin:0 0 12px;font-family:Fraunces,Georgia,serif;font-size:1.6rem}
+.rr{display:grid;grid-template-columns:96px 1fr 76px;gap:10px;align-items:center;margin:7px 0;font-size:.85rem}
+.rr i{height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;display:block}.rr b{display:block;height:100%;border-radius:3px;transition:width .5s}
+.rr em{font-style:normal;color:var(--mute);text-align:right;font-size:.75rem}
+.vol{margin-top:14px;display:grid;gap:8px}.vol label{display:grid;grid-template-columns:110px 1fr;align-items:center;font-size:.85rem;color:#c9cbd6}.vol input{accent-color:var(--gold);width:100%}
+.mrow{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}.mrow .go{margin-top:12px}
+</style></head>
+<body><canvas id="bg"></canvas><div id="fl"></div><div id="app">
+<div id="top"><span id="chn">KURSI</span><span><button id="mn">Menu</button><button id="mt">♪ Sound on</button></span></div>
+<div id="hud"><span class="lbl">TRUST</span><span class="chip" id="h_dev" title="Dev">D</span><span class="chip" id="h_naina" title="Naina">N</span><span class="chip" id="h_kabir" title="Kabir">K</span><span class="chip" id="h_lata" title="Lata">L</span><span class="chip" id="h_vik" title="Vikram">V</span><span class="lbl" style="margin-left:auto">INTEGRITY</span><div id="ib"><i></i></div></div>
+<div id="stage"><div id="aura"></div><div id="face"></div></div>
+<div id="toast"></div>
+<div id="box"><div id="who"></div><div id="txt"></div><div id="ch"></div><div id="hint"></div></div>
+<div id="card"></div>
+<div id="menu"><div class="mp"><h2>Paused</h2><div class="lbl">HOW PEOPLE FEEL ABOUT YOU</div><div id="rels"></div><div class="lbl" style="margin-top:14px">SOUND</div><div class="vol"><label>Music<input type="range" id="v_mu" min="0" max="100"></label><label>Effects<input type="range" id="v_sf" min="0" max="100"></label><label>Typing voices<input type="range" id="v_ty" min="0" max="100"></label></div><div class="mrow"><button class="go" id="rsm">Resume</button><button class="go ghost" id="rst">Back to title</button></div></div></div>
+</div>
+<script>
+var CL={Dev:"#e8a43a",Naina:"#3fc1b5",Kabir:"#a597ff",Meera:"#f1efe9","":"#6b7190",Lata:"#7bd88f",Vikram:"#e0584f",Sunita:"#e8c4a0",Anjali:"#f4b6c2"};
+var NM={Dev:"Dev Rao",Naina:"Naina Bose",Kabir:"Kabir",Lata:"Lata",Vikram:"Vikram Sethi",Sunita:"Sunita",Anjali:"Anjali Sundaram"};
+var RL={Dev:"Party kingmaker",Naina:"Journalist",Kabir:"Your aide",Lata:"Coalition MLA",Vikram:"Opposition leader",Sunita:"Rampur widow",Anjali:"Raghav’s widow"};
+var SIDE={Dev:1,Naina:1,Lata:1,Vikram:1,Kabir:-1,Sunita:-1,Anjali:-1};
+var paused=0,S,q,typing,tmr,ti,full,busy,gen=0,CH=null,tk=null;
+var $=function(i){return document.getElementById(i)};
+var SK="kursi_save_v1",EK="kursi_ends_v1",RES=null,curc=null;
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function ld(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+function rm(k){try{localStorage.removeItem(k)}catch(e){}}
+function man(who){return who}
+var STORY=[
+{ch:"Chapter 1",n:"The Call"},{loc:"Ch 1 · General Hospital, 2:14 AM"},
+["","Rain hammers the hospital windows. 2:14 AM. Chief Minister Raghav Sundaram is dead."],
+["","Six years as his deputy. Now every face in this corridor is turned toward you."],
+["","The corridor smells of antiseptic and wet wool. Somewhere a monitor is still beeping, though nobody in the room needs it anymore."],
+["","Three days ago Raghav told you: “Don’t let them make you comfortable, Meera.” You laughed. You thought he was tired."],
+["Kabir","(low) Madam, I pulled the hospital gate log. Something about tonight feels off."],
+{pz:"pick",o:{kick:"Hospital gate log",title:"Whose story doesn’t fit?",ask:"Gate log: Dr. Mehta 1:10 AM, Dev’s car 1:20 AM, Kabir 2:05 AM, Naina 2:40 AM. One statement contradicts it.",pick:1,items:[
+["Kabir: “I rushed over when I heard, around 2:05.”",0],["Dev: “Kabir called me at 2:00. I got here by 2:10.”",1],["Dr. Mehta: “I was on shift since midnight.”",0],["Naina: “A tip came at 2:20. I arrived by 2:40.”",0]],
+res:[[{},[["","You can’t make the log fit anyone. Not yet."]]],[{integ:1},[["","Dev’s car was at the gate at 1:20. Raghav died at 1:50. Dev knew before anyone called him. You say nothing. Yet."]]]]}},
+["Dev","Meera. Listen. Nobody outside knows yet. Give me one night and all ninety MLAs will be in your pocket before the news breaks."],
+["Dev","Announce now, and the Opposition smells blood."],
+["Kabir","Madam... people will find out anyway. Better it comes from you."],
+{c:[
+["“Fine. One night, Dev.”",{dev:2,kabir:-1,integ:-1},[["Dev","Good. Trust me, I have done this before."],["Kabir","...Of course, madam."]]],
+["“No. We announce at dawn.”",{integ:2,dev:-1,kabir:1},[["Dev","Then don’t come crying when they eat you alive."],["Kabir","Thank you, madam."]]],
+["“Kabir, say what you really think.”",{kabir:1,integ:1},[["Kabir","They will forgive grief. They won’t forgive being lied to."],["Dev","Idealism. Cute. Let’s see how long it lasts."]]]
+],t:18},
+["Kabir","Raghav’s phone was in his coat pocket. Locked. Maybe it explains something."],
+{pz:"code",o:{kick:"Raghav’s phone",title:"Four-digit PIN",clues:["Every digit is odd.","Each digit is bigger than the one before.","The digits add up to 16.","The first digit is 1."],n:4,ans:"1357",hint:"Try 3 as the second digit.",win:[{kabir:1},[["","The phone unlocks. One missed call from “R. Rao” at 1:05 AM. Dev’s cousin."],["Kabir","He called the CM thirty minutes before he died, madam."]]],lose:[{},[["Kabir","(quietly) It won’t open. We’ll try again later."]]]}},
+["","Your phone buzzes. Naina Bose. The one journalist who still calls you by your first name."],
+["Naina","Meera. A nurse at the hospital texted me. Something’s happened to Raghav. Confirm or deny?"],
+{c:[
+["Tell her the truth, off the record",{naina:2,integ:1,dev:-1},[["Naina","...Thank you. I’ll hold it till you announce. Don’t make me regret this."]]],
+["“No comment.”",{},[["Naina","That’s a yes in this city, Meera."]]],
+["“He’s resting. Stop chasing rumours.”",{naina:-2,integ:-1,dev:1},[["Naina","Wow. Okay. I used to be able to tell when you were lying."]]]
+],t:15},
+{ch:"Chapter 2",n:"The Folder"},{loc:"Ch 2 · Secretariat, morning"},
+["Kabir","Madam, the late CM’s private drawer. Nobody has opened it. Maybe he left you something."],
+["","A three-digit lock. A note in Raghav’s handwriting is taped beside it."],
+["","“Start small, double it, and the whole must make a dozen. I never trusted anything I couldn’t count.”"],
+{pz:"lock"},
+["","Morning. The oath is taken. The chair is yours, and it is heavier than it looked."],
+["Kabir","Madam. This was in the late CM’s locked drawer. He wanted you to have it."],
+["","Inside: Rampur bridge. Eleven dead three months ago. The contractor, Anand Infra, is owned by Dev’s cousin. Raghav had circled the name in red."],
+["Kabir","He was going to expose it the week he died."],
+{pz:"pick",o:{kick:"The Rampur file",title:"What doesn’t add up?",ask:"Six pages. Three of them hide the real problem. Pick the three that look wrong.",pick:3,items:[
+["Safety certificate signed four days after the collapse",1],["Inspection report: bridge load rated 40 tons",0],["Director of Anand Infra: R. Rao, Dev Rao’s cousin",1],["Tender notice printed in two newspapers",0],["₹2.4 crore paid to “Sri Sai Traders”, a shop with no tax record",1],["Site photo: monsoon rain, July",0]],
+res:[[{kabir:-1},[["Kabir","I can’t see the link, madam. Maybe we’re chasing shadows."]]],[{},[["","You find one real problem. The rest of the file is still fog."]]],[{proof:1},[["Kabir","Two solid leads. That’s enough to start asking questions."]]],[{proof:1,integ:1,kabir:1},[["Kabir","That’s it. Back-dated certificate, the cousin, a shell company. It all fits."]]]]}},
+{c:[
+["Burn it. Dev holds this government together.",{dev:2,integ:-3,kabir:-1,burned:1},[["","The paper curls and blackens in the ashtray. Kabir watches in silence."],["Kabir","I hope it was worth it, madam."]]],
+["Give it to Naina",{naina:2,integ:2,dev:-2,leaked:1},[["","You slide the folder across Naina’s table. She doesn’t say anything for a long time."],["Naina","You know this ends careers. Maybe yours."]]],
+["Confront Dev with it, privately",{dev:-1,integ:1,kabir:1},[["Dev","He cut corners to fund YOUR party election. Eleven people. And forty thousand jobs. Do the arithmetic, Meera."],["","You don’t answer. For the first time, you’re afraid of him."]]]
+],t:0},
+{loc:"Ch 2 · Secretariat, noon"},
+["","Cabinet formation. You need 91 votes to stay. You have 84."],
+["Lata","Madam Chief Minister. My six MLAs can make it 90. I want Water Resources. Non-negotiable."],
+["Kabir","(whispers) Her brother owns half the tanker business in the east, madam."],
+{c:[
+["Give her Water Resources",{lata:2,integ:-1},[["Lata","Pleasure doing business."]]],
+["Offer Culture and Tourism instead",{lata:-1,integ:1},[["Lata","An insult wrapped in a ribbon. I’ll sleep on it."]]],
+["“Give me a week to decide properly.”",{kabir:1},[["Lata","A week is a long time in this city."]]]
+],t:15},
+{loc:"Ch 2 · Raghav’s home, evening"},
+["","The CM’s residence still smells of his tea. Anjali Sundaram, Raghav’s widow, hasn’t changed out of the white saree she wore to the pyre."],
+["Anjali","He told me you would come. He said you would be the only one who knocked."],
+["Anjali","Thirty years, and he never brought work home. Except these last three months. He kept a diary. He locked it in his study and wouldn’t say why."],
+["Anjali","I could burn it, Meera. Or hand it to you. I am too tired to carry his secrets."],
+{c:[
+["“Give it to me. I’ll finish what he started.”",{integ:1,diary:1,kabir:1},[["Anjali","Then it was never his burden alone. Take it."],["","The diary is still warm from her hands. Raghav’s handwriting has never looked so steady."]]],
+["“Keep it safe. I don’t need it yet.”",{},[["Anjali","Safe is a word for people who are not being watched."]]],
+["“Burn it, Anjali. The state can’t afford this.”",{integ:-2,dev:1,diary:-1},[["Anjali","...So that is what the chair does to you."],["","She turns away. The match is already struck."]]]
+],t:0},
+function(){return S.diary>=1?[["","You read it standing up, in the dim hall. Most pages are shopping lists and half-finished thoughts. A few are not."],{pz:"pick",o:{kick:"Raghav’s diary",title:"Which three entries matter?",ask:"Six pages. Three of them are about Rampur and what he knew. Pick them.",pick:3,items:[
+["12 Mar: R. Rao visited. Asked me to “look away” on Rampur.",1],["Notes for the monsoon session agenda",0],["30 Mar: Dev says forty thousand jobs hang on my silence.",1],["Anjali’s mustard fish: less salt next time",0],["Last entry: “If this reaches Meera, the file is not the whole truth. Ask who signed the waiver.”",1],["Reminder: buy a new umbrella",0]],
+res:[[{integ:-1},[["","The pages blur together. You miss what he was trying to tell you."]]],[{},[["","One real clue. The rest is fog and umbrellas."]]],[{proof:1},[["","Two entries line up with the Rampur file. Raghav was closing in."]]],[{proof:2,integ:1},[["","One line is underlined twice: “Ask who signed the waiver.” Dev’s clause nine suddenly makes sense."]]]]}}]:[]},
+{ch:"Chapter 3",n:"Live"},{loc:"Ch 3 · TV studio, 9 PM"},
+["Kabir","(quietly) Whatever you say tonight, madam, I’ll stand behind it. My mother keeps Raghav’s photo next to the gods. I’d like to keep believing in him."],
+["","The floor manager counts down on his fingers. Your mouth is dry. Eleven million people are about to watch you decide who you are."],
+["Kabir","Ten minutes to air, madam. Naina will quote numbers. Check my briefing sheet."],
+{pz:"pick",o:{kick:"Briefing sheet",title:"Which numbers are right?",ask:"Six figures. Only three are correct. Don’t quote the wrong ones on live TV.",pick:3,items:[
+["Eleven people died at Rampur.",1],["Nineteen people died at Rampur.",0],["The bridge opened in 2004.",1],["The bridge opened in 1994.",0],["₹2.4 crore went to Sri Sai Traders.",1],["₹24 crore went to Sri Sai Traders.",0]],
+res:[[{naina:-1,integ:-1},[["Kabir","Madam, I think we’ve memorised the wrong figures."]]],[{naina:-1},[["Kabir","Only one of those was right. Be careful out there."]]],[{},[["Kabir","Two right. Don’t quote the third."]]],[{naina:1,integ:1},[["Kabir","All three. You know this file better than I do."]]]]}},
+["Kabir","She loves a timeline. Can you rebuild it from my notes?"],
+{pz:"order",o:{kick:"Rampur timeline",title:"Put the events in order",clues:["The inspection was waived after the tender but before the bridge opened.","The bus crossed after the bridge opened and before it fell.","The certificate was signed last, after the collapse."],items:["Tender goes to Anand Infra","Safety inspection waived","Bridge opens to traffic","The bus crosses","The bridge collapses","Safety certificate signed"],res:[[{naina:1,integ:1},[["Kabir","Perfect. You have it cold."]]],[{},[["Kabir","Two events swapped, but you’ll manage."]]],[{naina:-1},[["Kabir","Madam, the timeline is wrong. Please don’t say it out loud."]]]]}},
+["","Prime-time studio. Bright lights. Naina across the desk."],
+function(){if(S.leaked)return [["Naina","I have the folder, so I’ll skip the warm-up. Eleven people died at Rampur. Who is responsible?"]];
+if(S.burned)return [["Naina","Rumour is there was a file, and it vanished. Eleven people died at Rampur. Who is responsible?"]];
+return [["Naina","Eleven people died at Rampur. The contractor has links to your own party. Who is responsible?"]]},
+{c:[
+["“I’m ordering an independent inquiry. No one is exempt.”",{integ:1,naina:1,dev:-1},[["Naina","Noted. I’ll be watching that word, ‘independent’."]]],
+["“Contractor negligence. We have acted.”",{integ:-1,naina:-1,dev:1},[["Naina","That’s a press release, not an answer."]]],
+["“Who funds this channel, Naina?”",{naina:-2,integ:-1,dev:1},[["","The studio goes silent. Backstage, someone laughs. Nobody else does."]]]
+],t:12},
+["Kabir","Madam, the clip is everywhere. Whatever you chose, the whole state saw it."],
+{loc:"Ch 3 · In the car, after the interview"},
+["","Your phone again. Vikram Sethi, Leader of the Opposition. Twenty years of insults across the Assembly floor."],
+["Vikram","That was a decent answer, Meera. I don’t want this government to collapse over one bridge. Joint committee. I get a seat, you get some peace."],
+{c:[
+["“Joint committee. Agreed.”",{vik:2,dev:-1,integ:1},[["Vikram","Good. Tomorrow, then."]]],
+["“You just want a seat at my table.”",{vik:-1},[["Vikram","Of course I do. That doesn’t make me wrong."]]],
+["“Send me a proposal in writing.”",{vik:1},[["Vikram","Fair. You’re learning."]]]
+],t:0},
+{ch:"Chapter 4",n:"Rampur"},{loc:"Ch 4 · Rampur, by the broken bridge"},
+["","Dusk. Twisted steel hangs over a brown river. Families have lit candles along the bank."],
+["Kabir","Security wants you back in the car in ten minutes, madam."],
+["","A woman steps through the crowd. Sunita. Her husband was on that bus."],
+["","She is holding a steel tiffin carrier, still packed. “He forgot his lunch that morning,” she says, to no one in particular."],
+["Sunita","You’re the new Chief Minister? My son is nineteen. Who feeds us now?"],
+{sh:1},
+["Sunita","Eleven homes, madam. Eleven. And you came for ten minutes."],
+{c:[
+["“I’ll give your son a government job. Today.”",{integ:-1,pop:2,kabir:-1},[["Sunita","...Say it again."],["Kabir","(low) Madam, we can’t give eleven jobs. The rules..."]]],
+["Stay. Sit on the ground and listen.",{integ:1,pop:2,kabir:1,naina:1},[["","You sit in the dirt. Sunita talks for forty minutes. The security chief stops checking his watch."]]],
+["“The inquiry will answer your questions.”",{pop:-1},[["Sunita","Inquiries have answered nothing in this state for thirty years."]]]
+],t:15},
+["","On the way out, a site worker pulls you aside. “The engineer’s toolbox, madam. It holds the real load logs.”"],
+{pz:"code",o:{kick:"Site engineer’s toolbox",title:"Three-digit lock",clues:["All three digits are different.","The digits add up to 14.","No digit is bigger than 7.","The first digit is the biggest. The last is the smallest.","The middle digit is one more than the last."],n:3,ans:"743",hint:"The last digit is 3.",win:[{proof:1},[["","Inside: the real load logs. Seven cement trucks crossed that morning. The bridge was rated for far less."]]],lose:[{},[["","The worker breaks the lock with a rock. Inside: scraps. The logs are gone."]]]}},
+["Kabir","Madam, the treasury can free only ₹8 crore tonight. Eleven families. How do we spread it?"],
+{pz:"budget",o:{kick:"Relief fund",title:"Plan the spend",ask:"Spend up to 8 crore. Reach 11 points of help across the families.",items:[["Rebuild homes",5,5],["Monthly pensions",4,3],["Medical bills",3,2],["Job training",2,1],["School fees",3,2],["Funeral costs",2,1]],budget:8,base:0,target:11,unit:" pts",cu:" cr",end:function(v){return v>=11?[{pop:2,integ:1},[["Kabir","That’s the best spread we could have made."]]]:v>=9?[{pop:1},[["Kabir","Not perfect, but most families are covered."]]]:[{pop:-1},[["Kabir","Some families are left out, madam. They will notice."]]]}}},
+["Kabir","These families need real compensation, madam, not a speech. A fund tonight, or wait for the inquiry?"],
+{c:[
+["Announce a compensation fund tonight",{pop:2,dev:-1,integ:1},[["","Nine PM. The fund is announced. Naina is the first to share it."]]],
+["Wait for the inquiry report",{pop:-1,dev:1},[["Kabir","I understand, madam. I just hope they do."]]]
+],t:0},
+{ch:"Chapter 5",n:"Dev’s Price"},{loc:"Ch 5 · Dev’s farmhouse, midnight"},
+["","Midnight. Dev’s farmhouse. Two cups of chai going cold."],
+["Dev","Remember 2011? A rented room, three of us, two chairs and one dream. Raghav took the chair, you took the dream. I took the bills."],
+["Dev","Somebody had to pay for it all, Meera. Don’t look at me like I’m the only one who ate."],
+function(){return S.burned?[["Dev","I know what you did with the folder. I don’t forget. Now it’s time you didn’t forget me."]]:[["Dev","I’ve carried this party for thirty years. Time to collect."]]},
+["Dev","The Vedi Dam bill. Forty villages go under, and my people build it. Sign it and I give you the votes. Refuse, and I walk, along with thirty MLAs."],
+["Kabir","(a text) Madam, there’s a version with relocation money and half the villages saved. He may hate it."],
+["","The bill is thirty pages. Kabir has circled one clause. You have a minute to find it."],
+{pz:"pick",o:{kick:"The Vedi Dam bill",title:"Spot the hidden clause",ask:"One clause protects the contractor from past inquiries. Which one?",pick:1,items:[
+["Clause 4: ₹2 lakh relocation allowance per family",0],["Clause 9: Contractor exempt from review of past projects",1],["Clause 11: Environmental review within 90 days",0],["Clause 14: Compensation paid within 12 months",0],["Clause 17: Gram sabha to be consulted",0]],
+res:[[{integ:-1},[["","You miss it. Weeks from now someone will read clause nine out loud."]]],[{integ:1,dev:-1},[["Kabir","(whispers) Clause nine, madam. Immunity for the contractor."],["Dev","...Standard terms."]]]]}},
+{c:[
+["Sign the bill as it stands",{dev:2,integ:-2,kabir:-2},[["Dev","Now we understand each other."],["","Forty villages. You try not to think of the number."]]],
+["“No. Find another way, or walk.”",{dev:-2,integ:1,kabir:1},[["Dev","You’ll regret this by Friday."]]],
+["Counter with Kabir’s version",{kabir:1,dev:0,integ:0},[["Dev","...Smaller dam, smaller cut. I can live with that. Barely."]]]
+],t:0},
+["Dev","Look at this ledger. Not one rupee went to Anand Infra from my side."],
+{pz:"pick",o:{kick:"Dev’s ledger",title:"Follow the money",ask:"Three payments reach Anand Infra through other names. Find them.",pick:3,items:[
+["₹40 lakh to Rao Agro Supplies (director: R. Rao)",1],["₹12 lakh to State Printing Press",0],["₹2.4 crore to Sri Sai Traders (no tax record)",1],["₹8 lakh to District Hospital canteen",0],["₹65 lakh to Raghunath Cement (same address as Anand Infra)",1],["₹5 lakh to Teachers’ Welfare Fund",0]],
+res:[[{integ:-1},[["","You miss all of it. Dev smiles and says nothing."]]],[{},[["","One real lead. The rest blurs into the noise."]]],[{proof:1},[["","Two payments, clear as day. Dev notices you noticed."]]],[{proof:1,integ:1,dev:-1},[["Dev","(after a long silence) You’ve been learning."]]]]}},
+["Dev","One more thing. The Rampur inquiry. Make it ‘internal’. Your people, your pace."],
+{c:[
+["“Done. Internal it is.”",{dev:2,integ:-2,vik:-1},[["Dev","That’s the Meera I trained."]]],
+["“It stays independent.”",{dev:-1,integ:1,vik:1},[["Dev","Then we’re done being friends, I suppose."]]],
+["“Let me see the terms first.”",{kabir:1},[["Dev","Always lawyers and drafts with you."]]]
+],t:15},
+{loc:"Ch 5 · Dev’s gate, 1 AM"},
+["Kabir","Madam. A word before we leave. Dev will need someone to blame when the file leaks. It will be easier if it is me."],
+["Kabir","I can resign tonight. I will say I mishandled the Rampur papers. They always believe the aide."],
+{c:[
+["“No one takes this fall for me. Stay.”",{kabir:2,integ:1},[["Kabir","...Then I stay. And madam, I will stop pretending I am only an aide."]]],
+["“If it comes to that, I’ll let you.”",{kabir:-3,integ:-2,dev:1},[["Kabir","(quietly) Of course, madam."],["","He straightens his tie like a man putting on armour. He does not look at you again tonight."]]],
+["“Give me till morning to decide.”",{},[["Kabir","I’ll be at the gate. Where I always am."]]]
+],t:12},
+{ch:"Chapter 6",n:"The Leak"},{loc:"Ch 6 · CM’s residence, 6 AM"},
+{sh:1},
+["","The morning papers are on the table. One headline fills the front page: ANAND INFRA, DEV RAO’S COUSIN, AND ELEVEN DEAD."],
+function(){return S.leaked?[["Naina","(a text) Published. I should have called first. But it’s true."]]:[["Kabir","Someone in the department leaked it, madam. Not me. It could have been anyone."]]},
+["Vikram","The Opposition demands Dev Rao’s resignation by noon. Or yours."],
+{pz:"pick",o:{kick:"9 AM press statement",title:"Strike the lies",ask:"Kabir drafted five lines. Three are lies or spin that Naina will shred on air. Strike them.",pick:3,items:[
+["“Our government takes the Rampur tragedy seriously.”",0],["“The bridge was safe when it collapsed.”",1],["“Nobody in this government knew of any irregularity.”",1],["“I will meet all eleven families personally.”",0],["“The media is spreading rumours to destabilise the state.”",1]],
+res:[[{naina:-1,integ:-1,pop:-1},[["","You strike the honest lines. Naina tears the statement apart on air."]]],[{naina:-1},[["","The statement goes out half cleaned. Naina finds the rest in minutes."]]],[{},[["","Most of it holds up. One line will come back to haunt you."]]],[{naina:1,integ:1,pop:1},[["Naina","(a text) That’s the first honest statement this government has put out."]]]]}},
+["","Dev walks in without knocking. He looks older this morning."],
+function(){return S.dev>=2?[["Dev","I put you in that chair, Meera. Don’t you dare."]]:[["Dev","Say the word and I resign. Or burn me, and see how far that gets you."]]},
+{c:[
+["Ask Dev to resign, publicly",{dev:-2,integ:2,vik:1,pop:1},[["Dev","Thirty years. For one headline."],["","The door closes quietly. It is worse than a slam."]]],
+["Defend him: “The inquiry will decide.”",{dev:2,integ:-2,vik:-1,naina:-1},[["Dev","Good. We hold the line."]]],
+["Sack him and suspend the contractor",{dev:-3,integ:3,kabir:1,pop:2},[["","It is the hardest signature you have ever made."]]]
+],t:20},
+["","Afternoon. A second document leaks from the Secretariat at 2:15 AM. Kabir pulls the badge log."],
+{pz:"pick",o:{kick:"Badge log",title:"Who sent it?",ask:"Kabir left at 1:30 AM. Dev’s aide Rohit left at 2:00. Under-secretary Pillai left at 3:00. The email left the building at 2:15.",pick:1,items:[["Kabir",0],["Rohit, Dev’s aide",0],["Pillai, under-secretary",1],["Nobody inside, it came from outside",0]],
+res:[[{kabir:-1},[["","You accuse the wrong person. It takes a week to repair."]]],[{kabir:1,integ:1},[["Kabir","Pillai. His nephew was on that bus, madam."],["","You decide not to punish him."]]]]}},
+["","Midnight. An unknown number. Vikram Sethi."],
+["Vikram","Meera. I can bring eleven of my MLAs to your side on the vote. I want the Home ministry and a say in the inquiry."],
+{c:[
+["Accept. You need the votes.",{vik:2,integ:-1,dev:-1,lata:-1},[["Vikram","A pleasure."]]],
+["Offer a deputy post and a joint chair",{vik:1,integ:1},[["Vikram","Half a loaf. I’ll take it, grudgingly."]]],
+["“I’m not selling the state to win.”",{vik:-1,integ:2,pop:1},[["Vikram","Noble. And probably fatal."]]]
+],t:0},
+{ch:"Chapter 7",n:"Vote of Confidence"},{loc:"Ch 7 · State Assembly, vote day"},
+["","The Assembly. A hundred and eighty faces. The count will be close and everyone knows it."],
+["","You touch the arm of the chair once. Raghav sat here for six years and never looked comfortable. Now you understand why."],
+function(){var o=[];if(S.dev<=-2)o.push(["","Dev’s bloc sits with arms folded, far from you."]);if(S.naina>=2)o.push(["","Naina watches from the press gallery. She nods once."]);if(S.kabir>=1)o.push(["","Young MLAs near the back lean forward, waiting."]);return o.length?o:[["","Nobody leans forward. Nobody leans back. You are on your own."]]},
+["","Your speech. The last card you’ve got."],
+{c:[
+["Speak plainly. Own the failures.",{integ:1,naina:1,kabir:1},[["","Your voice shakes, then steadies. The hall is quiet."]]],
+["Promise free power and jobs for all",{dev:1,integ:-1,kabir:-1},[["","Applause comes fast. You are not sure it’s real."]]],
+["Warn defectors they will lose their seats",{dev:1,integ:-1,naina:-1},[["","A few ministers go pale. A few smile, just a little."]]]
+],t:0},
+{pz:"order",o:{kick:"Your speech",title:"Order your lines",clues:["Open with the people, not yourself.","The apology comes before the promise.","The ask always comes last."],items:["Name the Rampur families","Admit what you nearly buried","Promise the independent inquiry","Ask for their vote"],res:[[{naina:1,pop:1,integ:1},[["","The hall is silent. Then, slowly, someone claps."]]],[{},[["","The speech lands unevenly. Some nod. Some check their phones."]]],[{pop:-1},[["","You lose the room by the second paragraph."]]]]}},
+{pz:"whip"},{sh:1},["","The doors lock. The count begins."],
+function(){var s=S,e;
+if(!s.whip)e=s.integ>=2?["The Honest Loss","You fall "+s.gap+" votes short. You wouldn’t pay anyone’s price, and the House noticed. A year later the Rampur inquiry confirms every word you said. It doesn’t bring the chair back."]:["Short by "+s.gap,"The board shows "+(91-s.gap)+". You needed 91. The chair goes to Dev’s cousin by the end of the week. Outside, it is still raining."];
+else if(s.diary>=1&&s.integ>=3&&s.pop>=1)e=["The Last Page","You win by a single vote, and when the count is read out you are holding a dead man’s diary. Raghav’s last line becomes the first page of the inquiry. Dev resigns before the week is out. Anjali watches from the gallery in white, and for the first time since the pyre she lets herself cry. The chair is still heavy. But now you know what it is for."];
+else if(s.integ>=4&&s.kabir>=1)e=["Clean Hands","You win by four votes, thanks to rebels from both sides. Dev is gone and the Rampur inquiry begins. It will cost you friends and probably the next election, but Sunita’s son gets the truth."];
+else if(s.vik>=2&&s.lata>=1)e=["The Unity Government","Vikram’s MLAs and Lata’s six carry you over the line. You now lead a government where nobody is sure who is really in charge. It lasts, awkwardly."];
+else if(s.naina>=2&&s.integ>=1&&s.pop>=1)e=["The Headline","The count is razor thin, and the papers won it for you. Naina’s coverage and the Rampur families flipped four MLAs overnight. The public refused to let you fall."];
+else if(s.dev>=3&&s.integ<=0)e=["The Chair Keeper","You win in a landslide, and Dev’s people cheer loudest. Every file on your desk is signed in his handwriting first. Raghav’s drawer stays locked."];
+else e=["Survivor","You scrape through by two votes. Every ally hates one of your choices and every enemy respects another. Nobody is happy, which in this city is called a government. Late that night you open Raghav’s drawer again, find it empty, and realise it was never about what was inside. The chair is yours. So is every choice that put you in it."];
+return [{end:e}]}
+];
+function fx(f){var who=[];for(var k in f){S[k]=(S[k]||0)+f[k];if(f[k]&&/^(dev|naina|kabir|lata|vik)$/.test(k))who.push(k=="vik"?"Vikram":k[0].toUpperCase()+k.slice(1))}
+if(who.length){A.rem();toast(who.join(" and ")+" will remember that.",CL[who[0]])}updHud()}
+function pzEnd(f,bt){var c=$("card");c.style.display="none";c.className="";busy=0;var p=(f.integ||0)+(f.proof||0)+(f.pop||0)+(f.kabir||0)+(f.naina||0);if(p>0)A.good();else if(p<0)A.bad();else A.click();fx(f);q=bt.concat(q);step()}
+var LOCK={kick:"Raghav’s drawer",title:"Three-digit lock",clues:["The second digit is twice the first.","The three digits add up to 12.","The last digit is even.","The number does not end in 0."],n:3,ans:"246",hint:"All three digits are different, and the biggest is 6 or less.",win:[{kabir:1},[["","Click. The drawer slides open."],["Kabir","(grinning) Raghav always loved his puzzles, madam."]]],lose:[{},[["Kabir","(quietly) He told me the code once, madam. I should have said."],["","The drawer opens."]]]};
+function pzCode(o){var c=$("card"),d=[],tr=0;for(var i=0;i<o.n;i++)d.push(0);c.className="";c.style.display="flex";busy=1;A.paper();
+function draw(m){c.innerHTML='<div style="color:var(--mute)">'+o.kick+'</div><h1 style="font-size:1.7rem">'+o.title+'</h1><ul class="cl">'+o.clues.map(function(t){return '<li>'+t+'</li>'}).join("")+'</ul><div class="dg">'+d.map(function(v,i){return '<div><button data-u="'+i+'">▲</button><b>'+v+'</b><button data-d="'+i+'">▼</button></div>'}).join("")+'</div><div style="min-height:1.6em;color:var(--mute)">'+(m||"")+'</div><button class="go" id="tr">Try the code</button>';
+c.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var i=b.dataset.u;d[i]=(d[i]+1)%10;A.click();draw(m)}});
+c.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){var i=b.dataset.d;d[i]=(d[i]+9)%10;A.click();draw(m)}});
+$("tr").onclick=function(){tr++;if(d.join("")==o.ans)return pzEnd(o.win[0],o.win[1]);if(tr>=4)return pzEnd(o.lose[0],o.lose[1]);A.bad();d=d.map(function(){return 0});draw(tr>=2?"Wrong. Hint: "+o.hint:"Wrong. The lock resets.")}}
+draw()}
+function pzPick(o){var c=$("card"),sel={};c.className="";c.style.display="flex";busy=1;A.paper();
+function draw(){var n=Object.keys(sel).length;c.innerHTML='<div style="color:var(--mute)">'+o.kick+'</div><h1 style="font-size:1.6rem">'+o.title+'</h1><p>'+o.ask+'</p>'+o.items.map(function(it,i){return '<button class="it'+(sel[i]?" on":"")+'" data-i="'+i+'">'+it[0]+'</button>'}).join("")+'<button class="go" id="sb"'+(n==o.pick?"":" disabled")+'>Submit ('+n+"/"+o.pick+')</button>';
+c.querySelectorAll(".it").forEach(function(b){b.onclick=function(){var i=b.dataset.i;if(sel[i])delete sel[i];else if(Object.keys(sel).length<o.pick)sel[i]=1;A.click();draw()}});
+$("sb").onclick=function(){var ok=0;for(var i in sel)if(o.items[i][1])ok++;var z=o.res[ok];pzEnd(z[0],z[1])}}
+draw()}
+function pzOrder(o){var c=$("card"),seq=[],n=o.items.length,idx=o.items.map(function(t,i){return i}).sort(function(a,b){return (a*5+2)%7-(b*5+2)%7});c.className="";c.style.display="flex";busy=1;A.paper();
+function draw(){c.innerHTML='<div style="color:var(--mute)">'+o.kick+'</div><h1 style="font-size:1.6rem">'+o.title+'</h1><ul class="cl">'+o.clues.map(function(t){return '<li>'+t+'</li>'}).join("")+'</ul>'+idx.map(function(i){var p=seq.indexOf(i);return '<button class="it'+(p>=0?" on":"")+'" data-i="'+i+'">'+(p>=0?(p+1)+". ":"")+o.items[i]+'</button>'}).join("")+'<button class="go" id="sb"'+(seq.length==n?"":" disabled")+'>Lock in the order</button>';
+c.querySelectorAll(".it").forEach(function(b){b.onclick=function(){var i=+b.dataset.i,p=seq.indexOf(i);if(p>=0)seq=seq.slice(0,p);else seq.push(i);A.click();draw()}});
+$("sb").onclick=function(){var e=0;seq.forEach(function(v,i){if(v!=i)e++});var z=o.res[e==0?0:e<=2?1:2];pzEnd(z[0],z[1])}}
+draw()}
+function pzBudget(o){var c=$("card"),sel={};c.className="";c.style.display="flex";busy=1;A.paper();
+function draw(){var sp=0,v=o.base;for(var i in sel){sp+=o.items[i][2];v+=o.items[i][1]}
+c.innerHTML='<div style="color:var(--mute)">'+o.kick+'</div><h1 style="font-size:1.7rem">'+v+' / '+o.target+'</h1><p>'+o.ask+'</p>'+o.items.map(function(b,i){return '<button class="it'+(sel[i]?" on":"")+'" data-i="'+i+'"'+(b[3]?" disabled":"")+'>'+b[0]+': +'+b[1]+o.unit+', costs '+b[2]+o.cu+(b[3]?" (refuses)":"")+'</button>'}).join("")+'<div style="margin-top:8px">Left: '+(o.budget-sp)+o.cu+'</div><button class="go" id="sb">Confirm</button>';
+c.querySelectorAll(".it").forEach(function(b){b.onclick=function(){var i=b.dataset.i,u=0;for(var k in sel)u+=o.items[k][2];if(sel[i])delete sel[i];else if(u+o.items[i][2]<=o.budget)sel[i]=1;A.click();draw()}});
+$("sb").onclick=function(){var z=o.end(v);pzEnd(z[0],z[1])}}
+draw()}
+function pzWhip(){var base=Math.max(77,Math.min(86,80+S.dev+2*S.vik+S.lata+S.pop+S.naina+2*S.proof));
+pzBudget({kick:"Whip count",title:"Win the House",ask:"You hold "+base+" votes. Spend 3 favours to win blocs. Some may refuse you.",items:[["Eastern farmers",5,1],["Urban youth wing",4,1],["Women’s caucus",5,1],["Independents",3,1],["Dev’s loyalists",8,2,S.dev<=-2],["Opposition rebels",7,2,S.vik<0]],budget:3,base:base,target:91,unit:" votes",cu:" favours",
+end:function(v){S.whip=v>=91?1:0;S.gap=91-v;return [{},[["",v>=91?"You walk in holding "+v+" votes. It should be enough.":"You walk in holding "+v+" votes. You are short by "+(91-v)+". Everything now depends on the speech and a miracle."]]]}})}
+function lab(v){return v>=2?"Ally":v==1?"Friendly":v==0?"Unsure":v==-1?"Cold":"Enemy"}
+function start(){S={dev:0,naina:0,kabir:0,integ:0,leaked:0,burned:0,lata:0,vik:0,pop:0,proof:0,diary:0,whip:0,gap:0};if(RES){S=RES.s;q=STORY.slice(RES.p);curc=RES.c;if(curc){A.chapter(curc);scene(curc)}$("chn").textContent=RES.l||"KURSI"}else{q=STORY.slice();curc=null;rm(SK)}RES=null;busy=0;$("card").style.display="none";$("card").className="";$("ch").innerHTML="";$("hud").style.opacity=1;updHud();step()}
+function toast(msg,col){var t=$("toast");t.innerHTML='<span style="color:'+col+'">◆</span> '+msg;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.opacity=0},2400)}
+function updHud(){if(!S)return;var ks=["dev","naina","kabir","lata","vik"],nm=["Dev","Naina","Kabir","Lata","Vikram"];
+ks.forEach(function(k,i){var e=$("h_"+k),v=S[k]||0,col=CL[nm[i]];e.style.setProperty("--c",v<0?"#e0584f":col);e.style.opacity=v==0?.5:1;e.style.boxShadow=v>=1?"0 0 12px "+col:v<=-1?"0 0 10px #e0584f":"none";e.title=nm[i]+": "+lab(v)});
+var ig=Math.max(0,Math.min(1,((S.integ||0)+6)/14));$("ib").firstChild.style.width=Math.round(ig*100)+"%"}
+function setLoc(s){$("chn").textContent=s}
+function shake(){if(navigator.vibrate)navigator.vibrate([60,40,60]);var ap=$("app");ap.classList.remove("sk");void ap.offsetWidth;ap.classList.add("sk");A.thunder()}
+var CHAIR='<g fill="currentColor" opacity=".92"><rect x="62" y="30" width="76" height="106" rx="10"/><rect x="72" y="42" width="56" height="82" rx="6" fill="#0b0e17" opacity=".55"/><rect x="48" y="130" width="104" height="18" rx="6"/><rect x="44" y="96" width="14" height="54" rx="5"/><rect x="142" y="96" width="14" height="54" rx="5"/><rect x="58" y="148" width="10" height="66" rx="3"/><rect x="132" y="148" width="10" height="66" rx="3"/><circle cx="100" cy="20" r="6"/></g>';
+function chairSvg(){return '<svg viewBox="0 0 200 240">'+CHAIR+'</svg>'}
+function cue(t){var l=t.toLowerCase();
+if(/phone buzz|your phone again|\(a text\)|text\)/.test(l))A.buzz();
+if(/doors lock/.test(l))A.gavel();
+if(/papers are on the table/.test(l))A.paper();
+if(/rain hammers/.test(l))A.thunder();
+if(/click\./.test(l))A.lock();
+if(/applause/.test(l))A.clap();
+if(/ashtray|curls and blackens/.test(l))A.paper();
+if(/shut|slam/.test(l))A.gavel()}
+function say(w,t){var f=$("face"),st=$("stage");var md=w?mood(w,t):"";f.innerHTML=port(w,md);f.className="";void f.offsetWidth;f.className="in talk";
+st.style.setProperty("--sx",(SIDE[w]||0)*Math.min(innerWidth*.16,130)+"px");
+var col=CL[w]||CL[""];f.style.color=col;$("box").style.setProperty("--ac",col);st.style.setProperty("--ac",col);
+$("who").innerHTML=w?(NM[w]||w)+'<small>'+(RL[w]||"")+'</small>':"";
+$("txt").className=w?"":"nar";$("hint").textContent="";cue(t);
+full=t;typing=1;var i=0;$("txt").textContent="";clearTimeout(ti);
+(function nx(){i++;$("txt").textContent=full.slice(0,i);var ch=full[i-1];if(ch!=" ")A.type(w,ch,i);
+if(i>=full.length){typing=0;f.classList.remove("talk");$("hint").textContent="▸";return}
+var d=22,nz=full[i]==" "||i>=full.length;if(nz&&".!?".indexOf(ch)>=0)d=240;else if(nz&&",;:".indexOf(ch)>=0)d=120;else if(ch=="…")d=200;
+ti=setTimeout(nx,d)})()}
+function title(o){curc=o.ch;A.chapter(o.ch);scene(o.ch);flash2();var c=$("card"),n=o.ch.slice(-1);c.className="big";c.style.display="flex";c.innerHTML='<div class="cnum">0'+n+'</div><div class="ckick">'+o.ch+'</div><h1>'+o.n+'</h1><div class="cline"></div>';busy=1;setTimeout(function(){c.style.display="none";c.className="";busy=0;step()},2500)}
+function flash2(){var f=$("fl");f.style.opacity=.35;setTimeout(function(){f.style.opacity=0},120)}
+function step(){var x=q.shift();if(!x){return}
+var ix=STORY.indexOf(x);if(ix>=0)sv(SK,{p:ix,s:S,c:curc,l:$("chn").textContent});
+if(typeof x=="function"){q=x().concat(q);return step()}
+if(x.ch){setLoc(x.ch+": "+x.n);return title(x)}
+if(x.pz)return x.pz=="lock"?pzCode(LOCK):x.pz=="whip"?pzWhip():x.pz=="code"?pzCode(x.o):x.pz=="order"?pzOrder(x.o):x.pz=="budget"?pzBudget(x.o):pzPick(x.o);
+if(x.loc){setLoc(x.loc);return step()}
+if(x.sh){shake();return step()}
+if(x.end)return fin(x.end);
+if(x.c)return ask(x);
+say(x[0],x[1])}
+function ask(x){busy=1;CH=x;$("box").style.setProperty("--ac","#e8a43a");$("stage").style.setProperty("--ac","#e8a43a");$("who").textContent="Decide";$("txt").textContent="";$("txt").className="";$("hint").textContent="";$("face").classList.remove("talk");
+var h="";x.c.forEach(function(o,i){h+='<button data-i="'+i+'"><b>'+(i+1)+'</b><span>'+o[0]+'</span></button>'});
+if(x.t)h+='<div id="bar"><i></i></div>';$("ch").innerHTML=h;
+var g=++gen;$("ch").querySelectorAll("button").forEach(function(b){b.onclick=function(){pick(x,+b.dataset.i,g)};b.onmouseenter=function(){A.hover()}});
+if(x.t){A.tense(1);var b=$("bar").firstChild,t0=Date.now();b.style.transition="width "+x.t+"s linear";setTimeout(function(){b.style.width="0%"},30);
+clearInterval(tk);tk=setInterval(function(){var r=x.t-(Date.now()-t0)/1000;if(r<=0)return;A.tick(r<=4);if(r<=x.t*.3&&$("bar"))$("bar").classList.add("hot")},1000);
+tmr=setTimeout(function(){pick(x,-1,g)},x.t*1000)}}
+function pick(x,i,g){if(g!=gen)return;A.select();A.tense(0);gen++;clearTimeout(tmr);clearInterval(tk);CH=null;$("ch").innerHTML="";busy=0;var o;
+if(i<0){A.bad();o=["",{},[["","You hesitate. The silence says plenty."]]]}else o=x.c[i];
+fx(o[1]);q=o[2].concat(q);step()}
+function fin(e){busy=1;$("toast").style.opacity=0;var win=["The Last Page","Clean Hands","The Unity Government","The Headline","The Chair Keeper","Survivor"].indexOf(e[0])>=0;A.end(win);rm(SK);
+var en=ld(EK)||[],ek=e[0].indexOf("Short by")==0?"Short by":e[0];if(en.indexOf(ek)<0){en.push(ek);sv(EK,en)}
+var c=$("card");c.className="big";c.style.display="flex";c.style.setProperty("--ec",win?"#e8a43a":e[0]=="The Honest Loss"?"#a597ff":"#e0584f");
+var r=["dev","naina","kabir","lata","vik"].map(function(k){var n=k=="vik"?"Vikram":k[0].toUpperCase()+k.slice(1);return '<span style="color:'+CL[n]+'">'+n+": "+lab(S[k])+'</span>'}).join("");
+var pips="";for(var i=0;i<8;i++)pips+='<i class="'+(i<en.length?"on":"")+'"></i>';
+c.innerHTML='<div class="ea">'+endArt(e[0])+'</div><div class="ckick">Ending</div><h1>'+e[0]+'</h1><p>'+e[1]+'</p><div class="rel">'+r+'</div><div class="pips">'+pips+'</div><div class="ckick">Endings found: '+en.length+' / 8</div><button class="go" id="rs">Play again and choose differently</button>';
+$("rs").onclick=function(){A.click();start()}}
+function adv(){if(busy||paused)return;if(typing){clearTimeout(ti);typing=0;$("txt").textContent=full;$("face").classList.remove("talk");$("hint").textContent="▸";return}step()}
+document.addEventListener("click",function(e){var b=e.target.closest("button");if(b){b.blur();return}adv()});
+document.addEventListener("keydown",function(e){if(e.key=="Escape"){if(paused)closeMenu();else if(!busy)openMenu();return}if(paused||(e.target&&(e.target.tagName=="BUTTON"||e.target.tagName=="INPUT")))return;
+if(CH&&/^[1-9]$/.test(e.key)){var i=+e.key-1;if(CH.c[i])pick(CH,i,gen)}
+else if(e.key==" "||e.key=="Enter"||e.key=="ArrowRight"){e.preventDefault();adv()}});
+var VOL=ld("kursi_vol_v1")||{mu:1,sf:1,ty:1};
+var A=(function(){var c,m,mu,sf,md,ab,tg,rn,wd,cr,cw,hm,nz,on=1,ch=1,st=0,nxt=0,sch=null,ten=0;
+var Q={m:[0,3,7],M:[0,4,7]},PM=[0,3,5,7,10],PJ=[0,2,4,7,9];
+var M={
+1:{bpm:62,root:38,pr:[[0,"m"],[8,"M"],[5,"m"],[7,"M"]],bass:"1000000010000000",kick:"1001000000000000",soft:1,arp:"0010000000100000",lead:.5,sc:PM},
+2:{bpm:76,root:43,pr:[[0,"M"],[7,"M"],[9,"m"],[5,"M"]],bass:"1000100010001000",hat:"0010001000100010",arp:"1001001001001000",lead:.6,sc:PJ},
+3:{bpm:112,root:40,pr:[[0,"m"],[0,"m"],[8,"M"],[7,"M"]],bass:"1011101110111011",kick:"1000100010001000",snare:"0000100000001000",hat:"0010001000100010",arp:"1010101010101010",lead:.3,sc:PM},
+4:{bpm:54,root:41,pr:[[0,"m"],[10,"M"],[8,"M"],[7,"M"]],bass:"1000000000000000",arp:"0000000010000000",lead:.85,sc:PM},
+5:{bpm:72,root:43,pr:[[0,"m"],[5,"m"],[3,"M"],[7,"M"]],bass:"1000100110001010",kick:"1000000000100000",soft:1,snare:"0000100000001001",hat:"1010101010101010",lead:.6,sc:PM},
+6:{bpm:100,root:40,pr:[[0,"m"],[1,"M"],[0,"m"],[7,"M"]],bass:"1010101010101010",kick:"1000100010001000",snare:"0000100000001000",hat:"0101010101010101",arp:"0100010001000100",lead:.3,sc:PM},
+7:{bpm:88,root:45,pr:[[0,"m"],[8,"M"],[3,"M"],[10,"M"]],bass:"1000000010000000",kick:"1000000010000000",big:1,arp:"1000100010001000",lead:.7,sc:PM,choir:1},
+8:{bpm:58,root:43,pr:[[0,"M"],[5,"M"],[7,"M"],[0,"M"]],bass:"1000000010000000",arp:"1001001010010010",lead:.8,sc:PJ,choir:1},
+9:{bpm:50,root:38,pr:[[0,"m"],[8,"M"],[5,"m"],[0,"m"]],bass:"1000000000000000",arp:"0000100000000000",lead:.7,sc:PM}};
+var AMB={1:[1,0,0,0,0],2:[0,.3,0,.3,0],3:[0,0,0,.2,1],4:[.5,1,0,0,0],5:[.7,.3,1,0,0],6:[0,.4,0,.4,0],7:[.2,0,0,1,0],8:[0,.2,0,.4,0],9:[.5,.3,0,0,0]};
+var VO={Dev:[95,"sawtooth",.014],Naina:[330,"triangle",.02],Kabir:[220,"sine",.026],Lata:[260,"triangle",.02],Vikram:[80,"sawtooth",.014],Sunita:[280,"sine",.022],Anjali:[250,"sine",.02]};
+function fr(n){return 440*Math.pow(2,(n-69)/12)}
+function ir(sec,dec){var n=Math.floor(c.sampleRate*sec),b=c.createBuffer(2,n,c.sampleRate);for(var k=0;k<2;k++){var d=b.getChannelData(k);for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,dec)}return b}
+function loopNoise(freq,type,qq){var s=c.createBufferSource();s.buffer=nz;s.loop=true;var f=c.createBiquadFilter();f.type=type;f.frequency.value=freq;f.Q.value=qq||.5;var g=c.createGain();g.gain.value=0;s.connect(f);f.connect(g);g.connect(ab);s.start();return g}
+function init(){if(c)return;c=new(window.AudioContext||window.webkitAudioContext)();c.resume();
+m=c.createGain();m.gain.value=.9;var cp=c.createDynamicsCompressor();cp.threshold.value=-16;cp.ratio.value=5;m.connect(cp);cp.connect(c.destination);
+var b=c.createBuffer(1,c.sampleRate*2,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;nz=b;
+mu=c.createGain();mu.gain.value=.6;mu.connect(m);var rv=c.createConvolver();rv.buffer=ir(2.8,2.2);var rg=c.createGain();rg.gain.value=.55;mu.connect(rv);rv.connect(rg);rg.connect(m);
+sf=c.createGain();sf.gain.value=.85;sf.connect(m);md=c.createGain();md.connect(m);ab=c.createGain();ab.connect(m);tg=c.createGain();tg.connect(m);
+rn=loopNoise(3200,"bandpass",.4);wd=loopNoise(420,"lowpass",.7);cw=loopNoise(650,"bandpass",.35);
+var lf=c.createOscillator();lf.frequency.value=.15;var lg=c.createGain();lg.gain.value=.02;lf.connect(lg);lg.connect(wd.gain);lf.start();
+var co=c.createOscillator();co.frequency.value=4300;var cg1=c.createGain();cg1.gain.value=.5;var cl=c.createOscillator();cl.type="square";cl.frequency.value=9;var clg=c.createGain();clg.gain.value=.5;cl.connect(clg);clg.connect(cg1.gain);cr=c.createGain();cr.gain.value=0;co.connect(cg1);cg1.connect(cr);cr.connect(ab);co.start();cl.start();
+var h1=c.createOscillator(),h2=c.createOscillator();h1.frequency.value=100;h2.frequency.value=150;hm=c.createGain();hm.gain.value=0;h1.connect(hm);h2.connect(hm);hm.connect(ab);h1.start();h2.start();
+A.setVol("mu",VOL.mu);A.setVol("sf",VOL.sf);A.setVol("ty",VOL.ty);document.addEventListener("visibilitychange",function(){if(c){if(document.hidden)c.suspend();else c.resume()}})}
+function tone(n,t,d,ty,v,lp,dst,dt,vb){var o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();o.type=ty;o.frequency.value=fr(n);o.detune.value=(dt||0)+(Math.random()-.5)*10;f.type="lowpass";f.frequency.value=lp;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+Math.min(.5,d/3));g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(f);f.connect(g);g.connect(dst||mu);
+if(vb){var l=c.createOscillator(),lg=c.createGain();l.frequency.value=5;lg.gain.value=vb;l.connect(lg);lg.connect(o.detune);l.start(t);l.stop(t+d+.1)}o.start(t);o.stop(t+d+.1)}
+function env(f,d,ty,v,sw,to,dst){var n=c.currentTime+(to||0),o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.setValueAtTime(f,n);if(sw)o.frequency.exponentialRampToValueAtTime(sw,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(dst||sf);o.start(n);o.stop(n+d+.05)}
+function nb(t,d,f,type,v,dst){var s=c.createBufferSource(),l=c.createBiquadFilter(),g=c.createGain();s.buffer=nz;s.playbackRate.value=.8+Math.random()*.4;l.type=type;l.frequency.value=f;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);s.connect(l);l.connect(g);g.connect(dst||sf);s.start(t,Math.random()*1.4);s.stop(t+d+.02)}
+function kick(t,soft,big){var o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(big?95:soft?110:150,t);o.frequency.exponentialRampToValueAtTime(big?42:40,t+(big?.3:.14));g.gain.setValueAtTime(big?.9:soft?.45:.65,t);g.gain.exponentialRampToValueAtTime(.0001,t+(big?1:.35));o.connect(g);g.connect(md);o.start(t);o.stop(t+(big?1.05:.4))}
+function snare(t){nb(t,.14,1800,"highpass",.18,md);var o=c.createOscillator(),g=c.createGain();o.frequency.value=190;g.gain.setValueAtTime(.14,t);g.gain.exponentialRampToValueAtTime(.0001,t+.1);o.connect(g);g.connect(md);o.start(t);o.stop(t+.12)}
+function hat(t,v){nb(t,.04,7000,"highpass",v,md)}
+function beep(t){var o=c.createOscillator(),g=c.createGain();o.frequency.value=1020;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.05,t+.005);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.connect(g);g.connect(sf);o.start(t);o.stop(t+.15)}
+function sd(){return 60/M[ch].bpm/4}
+function play(s,t,mm){var b=s%16,ci=Math.floor(s/16)%mm.pr.length,cd=mm.pr[ci],r=mm.root+cd[0],qq=Q[cd[1]],bar=sd()*16;
+if(b==0){qq.forEach(function(i,k){tone(r+12+i,t,bar*1.05,"sawtooth",.035,650+ci*60,mu,(k-1)*7)});tone(r+12,t,bar,"sine",.16,320);if(mm.choir)qq.forEach(function(i){tone(r+24+i,t,bar,"sine",.03,2200,mu,4)})}
+if(mm.bass&&mm.bass[b]=="1"){tone(r,t,sd()*2.6,"triangle",.24,600);tone(r+12,t,sd()*2,"sine",.05,900)}
+if(mm.kick&&mm.kick[b]=="1")kick(t,mm.soft,mm.big);
+if(ten&&b%4==0&&!mm.kick)kick(t,1);
+if(mm.snare&&mm.snare[b]=="1")snare(t);
+if(mm.hat&&mm.hat[b]=="1")hat(t,.03);
+if(ten&&b%2==1)hat(t,.035);
+if(mm.arp&&mm.arp[b]=="1")tone(r+24+qq[(s>>1)%3],t,.9,"triangle",.06,2800);
+if(mm.lead&&(b==0||b==8)&&Math.random()<mm.lead){var sc=mm.sc;tone(r+24+sc[Math.floor(Math.random()*sc.length)],t+.02,sd()*7,"sine",.075,3000,mu,0,6)}
+if(ch==1&&b==0&&ci%2==0)beep(t)}
+function sched(){if(!c)return;if(!on){nxt=c.currentTime+.1;return}var mm=M[ch];while(nxt<c.currentTime+.25){play(st,nxt,mm);nxt+=sd();st++}}
+function amb(){var a=AMB[ch]||[0,0,0,0,0],t=c.currentTime;rn.gain.setTargetAtTime(a[0]*.09,t,1);wd.gain.setTargetAtTime(a[1]*.07,t,1);cr.gain.setTargetAtTime(a[2]*.012,t,1);cw.gain.setTargetAtTime(a[3]*.05,t,1);hm.gain.setTargetAtTime(a[4]*.012,t,1)}
+function restart(){st=0;nxt=c.currentTime+.15;clearInterval(sch);sch=setInterval(sched,60);amb()}
+return{init:init,
+type:function(w,chr,i){if(!on||!c||i%2)return;var n=chr.charCodeAt(0);
+if(w){var v=VO[w]||VO.Kabir,f=v[0]*(1+((n%9)-4)*.045);if("aeiouAEIOU".indexOf(chr)>=0)f*=1.28;env(f,.05,v[1],v[2],null,0,tg);nb(c.currentTime,.012,3200,"highpass",.02,tg)}
+else{nb(c.currentTime,.02,2200+(n%5)*300,"highpass",.06,tg);if(i%26==0)env(130,.09,"sine",.05,null,0,tg)}},
+hover:function(){if(on&&c)env(1200,.03,"triangle",.04)},
+click:function(){if(on&&c)env(300,.12,"triangle",.15,700)},
+select:function(){if(on&&c){env(300,.12,"triangle",.15,700);env(520,.18,"sine",.1,780,.05)}},
+tick:function(hot){if(on&&c)env(hot?1500:900,.04,"square",.05)},
+tense:function(v){ten=v},
+good:function(){if(on&&c)[72,76,79,84].forEach(function(n,k){env(fr(n),.45,"sine",.16,null,k*.07)})},
+bad:function(){if(on&&c){env(120,.4,"sawtooth",.18,60);env(90,.4,"square",.1,50)}},
+lock:function(){if(on&&c){nb(c.currentTime,.03,1500,"bandpass",.4);env(90,.1,"square",.2);env(1800,.02,"square",.12,null,.09)}},
+buzz:function(){if(on&&c){env(70,.12,"square",.25);env(70,.12,"square",.25,null,.2);env(1760,.05,"sine",.05,null,.42)}},
+gavel:function(){if(on&&c){nb(c.currentTime,.2,900,"lowpass",.5);env(80,.35,"sine",.7,40);env(900,.03,"square",.18);nb(c.currentTime+.35,.2,900,"lowpass",.5);env(80,.35,"sine",.7,40,.35)}},
+paper:function(){if(on&&c)nb(c.currentTime,.35,1800,"bandpass",.08)},
+clap:function(){if(on&&c)for(var i=0;i<30;i++)nb(c.currentTime+Math.random()*1.6,.05,2500,"bandpass",.06)},
+rem:function(){if(on&&c){env(70,.8,"sine",.5,35);env(880,1.2,"sine",.05);env(1320,1.4,"sine",.03)}},
+thunder:function(){if(on&&c)nb(c.currentTime,2.5,260,"lowpass",.9)},
+chapter:function(n){ch=parseInt(String(n).slice(-1))||1;if(!c)return;restart();if(on){env(55,2.2,"sine",.5,30);nb(c.currentTime,1.5,500,"lowpass",.3)}},
+end:function(win){if(!c)return;ch=win?8:9;restart();if(on)(win?[0,4,7,12]:[0,3,7,12]).forEach(function(i,k){env(fr(57+i),3,"triangle",.12,null,k*.25)})},
+setVol:function(k,v){if(!c)return;if(k=="mu"){mu.gain.value=.6*v;md.gain.value=v}else if(k=="sf"){sf.gain.value=.85*v;ab.gain.value=v}else tg.gain.value=v},
+tog:function(){on=!on;if(c){m.gain.setTargetAtTime(on?.9:0,c.currentTime,.1);nxt=c.currentTime+.1}return on}}})();
+var cv=$("bg"),g=cv.getContext("2d"),W,H,sk,old=null,fade=0,drops=[],parts=[],RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+var TH={
+1:{p:"hosp",a:"#08141b",b:"#12303a",c:"#0a1a20",w:"#7fe3d8",rain:1,l:1,moon:1,pt:"dust",pc:"170,220,230"},
+2:{p:"gov",a:"#2a1228",b:"#d8794a",c:"#e0a060",w:"#ffd9a0",sun:"rgba(255,170,90,.75)",pt:"mote",pc:"255,220,160"},
+3:{p:"studio",a:"#0e0a1c",b:"#2a1650",c:"#1a0e2e",w:"#d8b4ff",pt:"bokeh",pc:"216,150,255"},
+4:{p:"bridge",a:"#0d1218",b:"#34444f",c:"#1c262e",w:"#9fb4c4",rain:.45,pt:"dust",pc:"190,210,225"},
+5:{p:"farm",a:"#0e0a04",b:"#33200e",c:"#1a1006",w:"#ffb450",rain:.6,l:1,pt:"fly",pc:"255,230,120"},
+6:{p:"dawn",a:"#1a0710",b:"#8a2a36",c:"#4a1620",w:"#ff9aa8",sun:"rgba(255,90,90,.6)",sunc:"#ff8a7a",pt:"paper"},
+7:{p:"hall",a:"#12060e",b:"#4a1428",c:"#220812",w:"#ff8aa8",pt:"mote",pc:"255,200,160"}},cur=TH[1];
+function city(x,col,base,hmin,hmax,win){var px=-10;while(px<W){var bw=22+Math.random()*52,bh=hmin+Math.random()*(hmax-hmin);x.fillStyle=col;x.fillRect(px,base-bh,bw,bh+H);
+if(win)for(var wy=base-bh+10;wy<base-6;wy+=13)for(var wx=px+5;wx<px+bw-6;wx+=10)if(Math.random()<.24){x.fillStyle=cur.w;x.globalAlpha=.3+Math.random()*.55;x.fillRect(wx,wy,4,6);x.globalAlpha=1}
+if(Math.random()<.15){x.fillStyle=col;x.fillRect(px+bw/2-1,base-bh-18,2,18)}px+=bw+Math.random()*5}}
+function mk(){sk=document.createElement("canvas");sk.width=W;sk.height=H;var x=sk.getContext("2d"),hz=H*.74,p=cur.p,i;
+var gr=x.createLinearGradient(0,0,0,H);gr.addColorStop(0,cur.a);gr.addColorStop(.72,cur.b);gr.addColorStop(1,cur.c);x.fillStyle=gr;x.fillRect(0,0,W,H);
+if(p=="hosp"||p=="farm"||p=="bridge"){for(i=0;i<80;i++){x.globalAlpha=Math.random()*.6;x.fillStyle="#fff";x.fillRect(Math.random()*W,Math.random()*hz*.7,1.4,1.4)}x.globalAlpha=1}
+if(cur.moon){var mg=x.createRadialGradient(W*.16,H*.17,4,W*.16,H*.17,90);mg.addColorStop(0,"rgba(233,238,245,.5)");mg.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=mg;x.fillRect(0,0,W,H);x.fillStyle="#e9eef5";x.beginPath();x.arc(W*.16,H*.17,24,0,7);x.fill()}
+if(cur.sun){var sg=x.createRadialGradient(W*.64,hz,10,W*.64,hz,H*.55);sg.addColorStop(0,cur.sun);sg.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=sg;x.fillRect(0,0,W,H);x.fillStyle=cur.sunc||"#ffd9a0";x.beginPath();x.arc(W*.64,hz-6,Math.min(W,H)*.07,0,7);x.fill()}
+if(p=="hosp"){city(x,"#0b1a22",hz,H*.1,H*.26,1);var bx=W*.62,bw=Math.min(W*.3,300),bh=H*.4;x.fillStyle="#0a161c";x.fillRect(bx,hz-bh,bw,bh+H);
+for(var wy=hz-bh+14;wy<hz-8;wy+=18)for(var wx=bx+10;wx<bx+bw-14;wx+=16){x.globalAlpha=Math.random()<.35?.8:.12;x.fillStyle=cur.w;x.fillRect(wx,wy,8,10)}x.globalAlpha=1;city(x,"#05090d",hz+16,H*.06,H*.16,0)}
+else if(p=="gov"){city(x,"#3a1a24",hz,H*.06,H*.18,0);var cx=W*.36,bw2=Math.min(W*.6,520),bx2=cx-bw2/2,bh2=H*.12;x.fillStyle="#1c0b14";x.fillRect(bx2,hz-bh2,bw2,bh2+H);
+x.fillStyle="#2b1420";for(i=0;i<=10;i++)x.fillRect(bx2+8+i*(bw2-24)/10,hz-bh2-H*.05,10,H*.05);
+x.fillStyle="#1c0b14";x.fillRect(bx2-6,hz-bh2-H*.06,bw2+12,8);x.beginPath();x.arc(cx,hz-bh2-H*.06,bw2*.17,Math.PI,0);x.fill();x.fillRect(cx-2,hz-bh2-H*.06-bw2*.17-26,4,26);
+[-.34,.34].forEach(function(o){x.beginPath();x.arc(cx+bw2*o,hz-bh2-H*.06,bw2*.06,Math.PI,0);x.fill()});city(x,"#150810",hz+14,H*.04,H*.09,0)}
+else if(p=="studio"){x.fillStyle="#0a0614";x.fillRect(0,0,W,hz);var cols=Math.ceil(W/46),rows=Math.ceil(hz/46);
+for(var r=0;r<rows;r++)for(var k=0;k<cols;k++){x.fillStyle="hsla("+(270+Math.random()*60)+",70%,"+(14+Math.random()*16)+"%,.9)";x.fillRect(k*46+3,r*46+3,40,40)}
+var sw=Math.min(W*.5,420),sh=sw*.5,sx=W*.5-sw/2,sy=H*.12,sgr=x.createLinearGradient(sx,sy,sx+sw,sy+sh);sgr.addColorStop(0,"#2a1a5a");sgr.addColorStop(1,"#6a2a7a");x.fillStyle=sgr;x.fillRect(sx,sy,sw,sh);x.strokeStyle="#d8b4ff";x.globalAlpha=.5;x.strokeRect(sx,sy,sw,sh);x.globalAlpha=.55;x.fillStyle="#f1efe9";x.font="800 "+Math.round(sh*.22)+"px Bricolage Grotesque,sans-serif";x.textAlign="center";x.fillText("LIVE · 9 PM",W*.5,sy+sh*.6);x.globalAlpha=1;
+var fg=x.createLinearGradient(0,hz,0,H);fg.addColorStop(0,"#1c0f33");fg.addColorStop(1,"#07040f");x.fillStyle=fg;x.fillRect(0,hz,W,H-hz);x.strokeStyle="rgba(216,180,255,.12)";for(i=-6;i<=6;i++){x.beginPath();x.moveTo(W/2+i*40,hz);x.lineTo(W/2+i*220,H);x.stroke()}}
+else if(p=="bridge"){x.fillStyle="#141c24";x.beginPath();x.moveTo(0,hz);for(i=0;i<=W;i+=20)x.lineTo(i,hz-H*.08-Math.sin(i*.006)*H*.05-Math.sin(i*.017)*H*.015);x.lineTo(W,hz);x.fill();
+var rv=x.createLinearGradient(0,hz,0,H);rv.addColorStop(0,"#26343e");rv.addColorStop(1,"#0a0f14");x.fillStyle=rv;x.fillRect(0,hz,W,H-hz);
+var by=hz-H*.1;x.fillStyle="#05080b";x.strokeStyle="#05080b";x.lineWidth=3;x.fillRect(0,by,W*.4,8);
+for(i=0;i<8;i++){var px=i*W*.05;x.beginPath();x.moveTo(px,by);x.lineTo(px+W*.025,by-H*.07);x.lineTo(px+W*.05,by);x.stroke()}
+x.beginPath();x.moveTo(0,by-H*.07);x.lineTo(W*.4,by-H*.07);x.stroke();x.fillRect(W*.22,by,14,H);
+x.beginPath();x.moveTo(W*.4,by+8);x.lineTo(W*.43,by+H*.07);x.moveTo(W*.4,by);x.lineTo(W*.44,by+H*.03);x.moveTo(W*.38,by-H*.07);x.lineTo(W*.42,by-H*.02);x.lineTo(W*.4,by+H*.02);x.stroke();
+x.save();x.translate(W*.62,by+H*.1);x.rotate(.2);x.fillRect(0,0,W*.4,8);for(i=0;i<6;i++){x.beginPath();x.moveTo(i*W*.06,0);x.lineTo(i*W*.06+W*.03,-H*.05);x.lineTo(i*W*.06+W*.06,0);x.stroke()}x.restore();x.fillRect(W*.8,by+H*.07,14,H)}
+else if(p=="farm"){x.fillStyle="#120b04";x.beginPath();x.moveTo(0,hz);for(i=0;i<=W;i+=16)x.lineTo(i,hz-H*.05-Math.sin(i*.008+1)*H*.04);x.lineTo(W,hz);x.fill();
+for(i=0;i<9;i++){var tx=Math.random()*W,th=H*(.1+Math.random()*.12);x.fillStyle="#080502";x.fillRect(tx-3,hz-th,6,th);x.beginPath();x.arc(tx,hz-th,th*.45,0,7);x.fill()}
+var hx=W*.2,hy=hz-H*.12,hw=Math.min(W*.3,240),hh=H*.12;x.fillStyle="#1a0f06";x.fillRect(hx,hy,hw,hh);x.beginPath();x.moveTo(hx-12,hy);x.lineTo(hx+hw/2,hy-H*.07);x.lineTo(hx+hw+12,hy);x.fill();
+x.fillStyle="#ffb450";x.globalAlpha=.9;x.fillRect(hx+hw*.2,hy+hh*.3,hw*.18,hh*.35);x.fillRect(hx+hw*.62,hy+hh*.3,hw*.18,hh*.35);x.globalAlpha=1;
+var fg2=x.createLinearGradient(0,hz,0,H);fg2.addColorStop(0,"#1a1006");fg2.addColorStop(1,"#050301");x.fillStyle=fg2;x.fillRect(0,hz,W,H-hz);
+x.strokeStyle="#080502";x.lineWidth=3;for(i=0;i<W;i+=26){x.beginPath();x.moveTo(i,hz+8);x.lineTo(i,hz+34);x.stroke()}x.beginPath();x.moveTo(0,hz+16);x.lineTo(W,hz+16);x.stroke()}
+else if(p=="dawn"){city(x,"#3a1220",hz,H*.1,H*.28,1);city(x,"#12060b",hz+18,H*.05,H*.14,0)}
+else if(p=="hall"){x.fillStyle="#12060e";x.fillRect(0,0,W,H);
+for(i=0;i<6;i++){var c2=W*(i+.5)/6;x.fillStyle="#2a0e1c";x.fillRect(c2-22,0,44,hz);x.fillStyle="rgba(255,255,255,.05)";x.fillRect(c2-22,0,8,hz);x.fillStyle="#1a0812";x.fillRect(c2-30,hz-10,60,12)}
+var fg3=x.createLinearGradient(0,hz,0,H);fg3.addColorStop(0,"#2a0f1c");fg3.addColorStop(1,"#08030a");x.fillStyle=fg3;x.fillRect(0,hz,W,H-hz);
+for(var rr=0;rr<5;rr++){var yy=hz+rr*(H-hz)/5+12;for(var xx=-20;xx<W+20;xx+=34){x.fillStyle="#0a0408";x.beginPath();x.arc(xx+(rr%2)*17,yy,9+rr*1.6,Math.PI,0);x.fill();x.fillRect(xx+(rr%2)*17-10-rr,yy,20+rr*2,12)}}}
+if(p!="studio"&&p!="hall"&&p!="bridge"&&p!="farm"){var gg=x.createLinearGradient(0,hz,0,H);gg.addColorStop(0,"rgba(0,0,0,0)");gg.addColorStop(1,"rgba(0,0,0,.6)");x.fillStyle=gg;x.fillRect(0,hz,W,H-hz)}}
+function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;mk()}
+function scene(n){old=sk;fade=1;cur=TH[n.slice(-1)]||TH[1];parts=[];drops=[];if(W)mk()}
+function flash(){var f=$("fl");f.style.opacity=.7;setTimeout(function(){f.style.opacity=0},90);setTimeout(function(){f.style.opacity=.4;setTimeout(function(){f.style.opacity=0},80)},200);setTimeout(A.thunder,700)}
+function spawnP(){var n=cur.pt;if(!n||RM)return;var lim=n=="bokeh"?14:n=="paper"?9:60;if(parts.length>=lim||Math.random()>.2)return;
+if(n=="bokeh")parts.push({k:n,x:Math.random()*W,y:Math.random()*H*.8,vx:(Math.random()-.5)*.25,vy:-.05,r:14+Math.random()*30,s:Math.random()*6,c:cur.pc});
+else if(n=="paper")parts.push({k:n,x:-30,y:H*.1+Math.random()*H*.5,vx:2+Math.random()*2.5,vy:(Math.random()-.3)*1.2,r:10+Math.random()*10,s:Math.random()*6});
+else parts.push({k:n,x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.2-.05,r:1+Math.random()*2,s:Math.random()*6,c:cur.pc})}
+function dr(){var t=Date.now()/1000,p=cur.p,i;g.drawImage(sk,0,0);
+if(fade>0&&old){g.globalAlpha=fade;g.drawImage(old,0,0);g.globalAlpha=1;fade-=.025}
+if(p=="gov"||p=="hall"){g.fillStyle="rgba(255,200,150,.045)";for(i=0;i<4;i++){var x0=W*(.1+i*.25);g.beginPath();g.moveTo(x0,0);g.lineTo(x0+60,0);g.lineTo(x0+260+Math.sin(t*.3+i)*20,H);g.lineTo(x0+120+Math.sin(t*.3+i)*20,H);g.fill()}}
+if(p=="gov"&&!RM){g.strokeStyle="rgba(20,8,16,.8)";g.lineWidth=2;for(i=0;i<5;i++){var bx=((t*40*(1+.2*i)+i*220)%(W+100))-50,by=H*(.14+.04*i)+Math.sin(t*2+i)*8,wg=Math.sin(t*10+i)*5;g.beginPath();g.moveTo(bx-8,by+wg);g.quadraticCurveTo(bx,by,bx+8,by+wg);g.stroke()}}
+if(cur.rain&&!RM){for(i=0;i<3;i++)if(drops.length<150*cur.rain)drops.push({x:Math.random()*W,y:-10,v:14+Math.random()*10});
+g.strokeStyle="rgba(180,210,230,.28)";g.lineWidth=1;g.beginPath();for(i=drops.length-1;i>=0;i--){var d=drops[i];g.moveTo(d.x,d.y);g.lineTo(d.x-3,d.y+14);d.y+=d.v;d.x-=2;if(d.y>H)drops.splice(i,1)}g.stroke()}
+if(p=="hosp"){var ph=Math.sin(t*5)>0;var lg=g.createRadialGradient(W*.1,H*.34,10,W*.1,H*.34,300);lg.addColorStop(0,ph?"rgba(255,60,60,.22)":"rgba(60,120,255,.22)");lg.addColorStop(1,"rgba(0,0,0,0)");g.fillStyle=lg;g.fillRect(0,0,W,H);
+var cx=W*.77,cy=H*.18,pu=.5+.3*Math.sin(t*2);g.fillStyle="rgba(255,70,70,"+pu+")";g.fillRect(cx,cy,14,44);g.fillRect(cx-15,cy+15,44,14);
+g.strokeStyle="rgba(255,90,90,.85)";g.lineWidth=2;g.beginPath();var ex=W*.64,ey=H*.46;g.moveTo(ex,ey);for(i=0;i<Math.min(W*.25,230);i+=3)g.lineTo(ex+i,ey+(Math.random()-.5)*1.2);g.stroke()}
+if(p=="studio"){var on2=Math.sin(t*1.6)>-.4;g.fillStyle=on2?"#d0213a":"#4a0f18";g.fillRect(W*.04,H*.2,86,30);g.fillStyle="#fff";g.font="700 16px sans-serif";g.textAlign="left";g.fillText("ON AIR",W*.04+14,H*.2+21);
+g.fillStyle="rgba(255,230,255,.07)";for(i=0;i<2;i++){var ang=Math.sin(t*.6+i*2)*140,px=W*(.25+.5*i);g.beginPath();g.moveTo(px,0);g.lineTo(px-60+ang,H*.78);g.lineTo(px+60+ang,H*.78);g.fill()}
+g.fillStyle="#05030a";g.fillRect(W*.84,H*.5,46,30);g.fillRect(W*.855,H*.5+30,16,70);g.beginPath();g.arc(W*.84,H*.5+15,12,0,7);g.fill();if(Math.sin(t*3)>0){g.fillStyle="#ff3040";g.beginPath();g.arc(W*.84+36,H*.5+6,3,0,7);g.fill()}}
+if(p=="bridge"){var hz2=H*.74;g.strokeStyle="rgba(190,210,225,.18)";g.lineWidth=1.5;for(i=0;i<26;i++){var sx2=((i*97+t*14*(1+(i%3)*.4))%W),sy2=hz2+8+((i*53)%(H-hz2));g.beginPath();g.moveTo(sx2,sy2);g.lineTo(sx2+16+(i%4)*8,sy2);g.stroke()}
+for(i=0;i<18;i++){var fx=(i*83)%W,fy=H*.86+(i%3)*10,fl=.55+.4*Math.sin(t*5+i*1.7);g.fillStyle="rgba(255,190,90,"+fl+")";g.beginPath();g.ellipse(fx,fy,2.4,4.5,0,0,7);g.fill();var cg=g.createRadialGradient(fx,fy,1,fx,fy,26);cg.addColorStop(0,"rgba(255,170,70,"+fl*.3+")");cg.addColorStop(1,"rgba(255,170,70,0)");g.fillStyle=cg;g.fillRect(fx-26,fy-26,52,52)}
+for(i=0;i<5;i++){var dx=((t*14+i*260)%(W+80))-40,dy=H*.8+i*9+Math.sin(t+i)*2;g.fillStyle="rgba(255,160,60,.9)";g.beginPath();g.ellipse(dx,dy,5,2.5,0,0,7);g.fill()}
+g.fillStyle="rgba(180,200,215,.06)";for(i=0;i<3;i++)g.fillRect(((t*10+i*300)%(W+400))-400,H*.62+i*30,420,26)}
+if(p=="farm"){var lw=g.createRadialGradient(W*.2+60,H*.74-H*.07,4,W*.2+60,H*.74-H*.07,200);lw.addColorStop(0,"rgba(255,180,80,.4)");lw.addColorStop(1,"rgba(255,180,80,0)");g.fillStyle=lw;g.fillRect(0,0,W,H);
+g.fillStyle="rgba(255,240,200,.8)";for(i=0;i<5;i++){var a=t*2.2+i*1.3,mx=W*.2+60+Math.cos(a)*(30+i*9),my=H*.74-H*.09+Math.sin(a*1.4)*(18+i*5);g.fillRect(mx,my,2.4,2.4)}}
+if(p=="dawn"&&!RM&&Math.random()<.02){g.fillStyle="rgba(255,255,255,.35)";var fx2=Math.random()*W,fy2=H*.3+Math.random()*H*.35;g.beginPath();g.arc(fx2,fy2,40+Math.random()*30,0,7);g.fill()}
+if(p=="hall"){var sw2=Math.sin(t*.8)*14,chx=W*.5+sw2;g.strokeStyle="rgba(255,220,170,.5)";g.lineWidth=2;g.beginPath();g.moveTo(W*.5,0);g.lineTo(chx,H*.1);g.stroke();var ch2=g.createRadialGradient(chx,H*.12,3,chx,H*.12,130);ch2.addColorStop(0,"rgba(255,220,160,.7)");ch2.addColorStop(1,"rgba(255,180,120,0)");g.fillStyle=ch2;g.fillRect(chx-130,H*.12-130,260,260);g.fillStyle="rgba(255,240,200,.95)";for(i=-2;i<=2;i++){g.beginPath();g.arc(chx+i*14,H*.1+Math.abs(i)*5,3,0,7);g.fill()}}
+spawnP();for(i=parts.length-1;i>=0;i--){var pr=parts[i];pr.x+=pr.vx;pr.y+=pr.vy;var al;
+if(pr.k=="paper"){pr.s+=.08;g.fillStyle="rgba(232,224,207,.75)";g.save();g.translate(pr.x,pr.y);g.rotate(pr.s*.6);g.fillRect(-pr.r*.6*Math.abs(Math.cos(pr.s)),-pr.r*.8,pr.r*1.2*Math.abs(Math.cos(pr.s))+1,pr.r*1.6);g.restore();if(pr.x>W+40)parts.splice(i,1);continue}
+if(pr.k=="bokeh"){al=.07+.05*Math.sin(t+pr.s);g.fillStyle="rgba("+pr.c+","+al+")";g.beginPath();g.arc(pr.x,pr.y,pr.r,0,7);g.fill()}
+else{al=pr.k=="fly"?.8*Math.abs(Math.sin(t*1.5+pr.s)):.15+.25*Math.abs(Math.sin(t*.7+pr.s));g.fillStyle="rgba("+pr.c+","+al+")";g.beginPath();g.arc(pr.x,pr.y,pr.r*(pr.k=="fly"?1.4:1),0,7);g.fill()}
+if(pr.x<-40||pr.x>W+40||pr.y<-40||pr.y>H+40)parts.splice(i,1)}
+if(cur.l&&!RM&&Math.random()<.003)flash();
+requestAnimationFrame(dr)}
+function port0(w){var sk0=function(s){return '<rect x="86" y="140" width="28" height="32" fill="'+s+'"/><ellipse cx="100" cy="146" rx="22" ry="8" fill="#000" opacity=".2"/>'};
+var fc=function(s){return '<ellipse cx="62" cy="106" rx="6" ry="9" fill="'+s+'"/><ellipse cx="138" cy="106" rx="6" ry="9" fill="'+s+'"/><ellipse cx="100" cy="102" rx="39" ry="47" fill="'+s+'"/><ellipse cx="78" cy="118" rx="8" ry="5" fill="#d0584f" opacity=".12"/><ellipse cx="122" cy="118" rx="8" ry="5" fill="#d0584f" opacity=".12"/>'};
+var eyes='<g class="ew"><g class="ey"><ellipse cx="85" cy="104" rx="4.5" ry="5.5" fill="#150f18"/><ellipse cx="115" cy="104" rx="4.5" ry="5.5" fill="#150f18"/><circle cx="86.5" cy="102" r="1.4" fill="#fff"/><circle cx="116.5" cy="102" r="1.4" fill="#fff"/></g></g>';
+var mouth='<ellipse class="mo" cx="100" cy="130" rx="8" ry="2" fill="#6b2a33"/>',nose='<path d="M100 106q-6 14 0 17" stroke="#000" stroke-opacity=".22" stroke-width="2" fill="none" stroke-linecap="round"/>';
+var s='<svg viewBox="0 0 200 240">';
+if(!w)return s+chairSvg().replace('<svg viewBox="0 0 200 240">','').replace('</svg>','')+'</svg>';
+if(w=="Dev")return s+sk0("#b98259")+'<path d="M14 240Q16 172 74 164L100 176L126 164Q184 172 186 240Z" fill="#e9dfc8"/><path d="M14 240Q16 172 74 164L96 184L72 240Z" fill="#e8a43a"/><path d="M30 240Q36 192 74 172" stroke="#b97d1c" stroke-width="4" fill="none"/><path d="M86 164L100 198L114 164" fill="none" stroke="#bfb293" stroke-width="3"/>'+fc("#c99a6e")+'<path d="M60 96Q60 52 100 50Q140 52 140 96Q130 68 100 66Q70 68 60 96Z" fill="#b9b4a8"/>'+eyes+'<path d="M71 92Q84 85 96 92M104 92Q116 85 129 92" stroke="#8d887d" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M69 113q4 4 9 0M122 113q4 4 9 0" stroke="#000" stroke-opacity=".25" fill="none"/>'+nose+'<path d="M80 124Q100 114 120 124Q108 132 100 126Q92 132 80 124Z" fill="#6f6a60"/>'+mouth+'</svg>';
+if(w=="Naina")return s+'<path d="M52 104Q48 40 100 38Q152 40 148 104L152 156Q132 154 128 134L72 134Q68 154 48 156Z" fill="#1b1420"/>'+sk0("#c48a64")+'<path d="M52 240Q54 176 84 166L100 200L116 166Q146 176 148 240Z" fill="#1f7a72"/><path d="M84 166L100 204L116 166Z" fill="#f1efe9"/><path d="M70 168L100 216L130 168L146 174L100 240L54 174Z" fill="#2a8f86"/>'+fc("#d9a47c")+'<path d="M58 88Q70 48 100 52Q130 48 142 88Q120 64 100 68Q80 64 58 88Z" fill="#1b1420"/>'+eyes+'<path d="M72 93Q84 87 96 93M104 93Q116 87 128 93" stroke="#1b1420" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="58" cy="122" r="3.5" fill="#e8c44a"/><circle cx="142" cy="122" r="3.5" fill="#e8c44a"/>'+nose+'<path d="M90 128Q100 134 110 128" fill="#b0404e"/>'+mouth+'</svg>';
+if(w=="Kabir")return s+sk0("#a67452")+'<path d="M16 240Q18 172 76 164L100 176L124 164Q182 172 184 240Z" fill="#ddd8ee"/><path d="M84 164L100 180L116 164L100 240Z" fill="#fff" opacity=".9"/><path d="M96 180L104 180L108 236L100 244L92 236Z" fill="#5b4fb0"/>'+fc("#b98563")+'<path d="M60 90Q64 48 100 48Q138 50 140 90Q128 62 96 64Q74 66 60 90Z" fill="#15121e"/>'+eyes+'<g fill="rgba(255,255,255,.08)" stroke="#0b0e17" stroke-width="2.2"><circle cx="85" cy="104" r="12"/><circle cx="115" cy="104" r="12"/><path d="M97 103h6" fill="none"/><path d="M73 102L62 98M127 102L138 98" fill="none"/></g><path d="M73 90Q85 85 96 90M104 90Q115 85 127 90" stroke="#15121e" stroke-width="3.5" fill="none" stroke-linecap="round"/>'+nose+mouth+'<rect x="128" y="190" width="22" height="28" rx="3" fill="#a597ff"/><rect x="134" y="195" width="10" height="3" fill="#0b0e17" opacity=".5"/></svg>';
+if(w=="Lata")return s+'<circle cx="100" cy="46" r="20" fill="#1a1218"/>'+sk0("#b57d54")+'<path d="M16 240Q18 176 70 166L100 182L130 166Q182 176 184 240Z" fill="#b8344a"/><path d="M24 240Q28 188 78 168L150 206L178 240Z" fill="#2f9e57"/><path d="M24 240Q28 188 78 168L150 206L178 240Z" fill="none" stroke="#e8c44a" stroke-width="5"/><path d="M86 164L100 184L114 164" fill="none" stroke="#e8c44a" stroke-width="2.5"/>'+fc("#c48a62")+'<path d="M60 96Q60 52 100 50Q140 52 140 96Q130 66 100 64Q70 66 60 96Z" fill="#1a1218"/><circle cx="100" cy="80" r="3.2" fill="#d0213a"/>'+eyes+'<path d="M72 93Q84 87 96 93M104 93Q116 87 128 93" stroke="#1a1218" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="57" cy="120" r="3" fill="#e8c44a"/><circle cx="143" cy="120" r="3" fill="#e8c44a"/>'+nose+mouth+'</svg>';
+if(w=="Vikram")return s+sk0("#a06c4a")+'<path d="M12 240Q14 172 80 164L100 214L120 164Q186 172 188 240Z" fill="#8f2d2d"/><path d="M84 164L100 214L116 164Z" fill="#ece4d6"/><circle cx="100" cy="196" r="2.5" fill="#e8c44a"/><circle cx="100" cy="212" r="2.5" fill="#e8c44a"/>'+fc("#b57d5a")+'<path d="M60 92Q60 48 100 46Q140 48 140 92Q132 64 100 62Q68 64 60 92Z" fill="#2a2630"/><path d="M84 54Q104 46 124 56" stroke="#c9c5cc" stroke-width="4" fill="none" stroke-linecap="round"/>'+eyes+'<path d="M70 92Q84 84 97 91M103 91Q116 84 130 92" stroke="#1d1a22" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M68 124Q100 158 132 124Q116 150 100 150Q84 150 68 124Z" fill="#000" opacity=".2"/>'+nose+mouth+'</svg>';
+if(w=="Anjali")return s+'<path d="M44 112Q40 44 100 40Q160 44 156 112L160 190L40 190Z" fill="#b9b4b0"/><circle cx="100" cy="40" r="16" fill="#b9b4b0"/>'+sk0("#c79a78")+'<path d="M14 240Q16 172 100 164Q184 172 186 240Z" fill="#efece6"/><path d="M14 240Q16 172 100 164Q184 172 186 240Z" fill="none" stroke="#c9c2b4" stroke-width="3"/><path d="M60 170L100 216L132 168" fill="none" stroke="#c9c2b4" stroke-width="3"/>'+fc("#d1a583")+'<path d="M52 104Q50 46 100 42Q150 46 148 104Q140 70 100 68Q60 70 52 104Z" fill="#f3f0ea"/><path d="M52 104Q50 46 100 42" fill="none" stroke="#d8d2c6" stroke-width="2"/>'+eyes+'<path d="M72 93Q84 89 96 93M104 93Q116 89 128 93" stroke="#8d8782" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M68 112q4 4 9 0M123 112q4 4 9 0" stroke="#000" stroke-opacity=".2" fill="none"/>'+nose+mouth+'</svg>';
+if(w=="Sunita")return s+'<path d="M44 112Q40 40 100 36Q160 40 156 112L162 196L38 196Z" fill="#d9ac82"/>'+sk0("#c9946c")+'<path d="M14 240Q16 172 100 164Q184 172 186 240Z" fill="#8a6a52"/><path d="M14 240Q16 176 70 166L110 210L84 240Z" fill="#d9ac82"/>'+fc("#c9946c")+'<path d="M58 98Q60 50 100 48Q140 50 142 98Q132 70 100 68Q68 70 58 98Z" fill="#d9ac82"/><path d="M58 98Q60 50 100 48" fill="none" stroke="#b58a62" stroke-width="2"/>'+eyes+'<path d="M72 96Q84 92 96 90M104 90Q116 92 128 96" stroke="#3a2a22" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M82 116q-3 8 0 12q3-4 0-12Z" fill="#9fd4ff" opacity=".85"/>'+nose+mouth+'</svg>';
+return s+chairSvg().replace('<svg viewBox="0 0 200 240">','').replace('</svg>','')+'</svg>'}
+var BRW=/<path d="M[\d. ]+Q[\d. ]+M[\d. ]+Q[\d. ]+" stroke="(#[0-9a-fA-F]{6})" stroke-width="([\d.]+)" fill="none" stroke-linecap="round"\/>/;
+var MB={angry:'M72 86L96 95M104 95L128 86',sad:'M72 96L96 88M104 88L128 96',shock:'M73 83Q85 77 96 83M104 83Q115 77 127 83',smile:'M73 89Q85 84 96 89M104 89Q115 84 127 89',smirk:'M72 90Q84 85 96 90M104 86Q116 78 128 86'};
+function port(w,mo){var svg=port0(w);if(!w||!mo||!MB[mo])return svg;
+svg=svg.replace(BRW,function(m,c,wd){return '<path d="'+MB[mo]+'" stroke="'+c+'" stroke-width="'+wd+'" fill="none" stroke-linecap="round"/>'});
+var ov='';
+if(mo=="angry")ov='<path d="M126 62q6 2 6 8M133 63q-5 3-6 9" stroke="#e0584f" stroke-width="2.5" fill="none" stroke-linecap="round"/>';
+else if(mo=="sad")ov='<path d="M80 118q-3 8 0 12q3-4 0-12Z" fill="#9fd4ff" opacity=".85"/>';
+else if(mo=="shock")ov='<path d="M146 70l6-8M150 78l9-3M142 62l3-9" stroke="#fff" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M134 74q-4 8 0 11q4-3 0-11Z" fill="#9fd4ff" opacity=".9"/>';
+else if(mo=="smile")ov='<path class="sm" d="M86 127Q100 141 114 127" stroke="#6b2a33" stroke-width="3" fill="none" stroke-linecap="round"/>';
+else if(mo=="smirk")ov='<path class="sm" d="M88 130Q102 136 114 124" stroke="#6b2a33" stroke-width="3" fill="none" stroke-linecap="round"/>';
+return svg.replace('<svg viewBox="0 0 200 240">','<svg viewBox="0 0 200 240" class="m-'+mo+'">').replace('</svg>',ov+'</svg>')}
+function mood(w,t){var l=t.toLowerCase();
+if(/come crying|you dare|regret|alive|done being friends|how dare/.test(l))return "angry";
+if(/vanished|something.s happened|before he died|nobody outside|please don.t say|what\?/.test(l))return "shock";
+if((w=="Dev"||w=="Vikram"||w=="Naina")&&/cute|idealism|noble|half a loaf|lawyers|learning|press release|wow\./.test(l))return "smirk";
+if(/thank you|pleasure|good\.|perfect|that.s it\.|grinning|you know this file|best spread/.test(l))return "smile";
+if(w=="Sunita"||/quietly|hope it was worth|couldn.t|nephew|my son|i should have|too tired/.test(l))return "sad";
+return ""}
+function chairG(x,y,s,r,col){return '<g transform="translate('+x+' '+y+') scale('+s+') rotate('+(r||0)+' 100 120)" style="color:'+(col||"currentColor")+'">'+CHAIR+'</g>'}
+function endArt(n){var o='<svg viewBox="0 0 260 160">',k;
+if(n=="Clean Hands"||n=="The Last Page"){for(k=0;k<14;k++){var a=k*Math.PI/7;o+='<line x1="130" y1="82" x2="'+(130+Math.cos(a)*120)+'" y2="'+(82+Math.sin(a)*120)+'" stroke="currentColor" stroke-opacity=".22" stroke-width="3"/>'}o+=chairG(80,20,.5);if(n=="The Last Page")o+='<rect x="108" y="96" width="44" height="30" rx="3" fill="#f1efe9" opacity=".92"/><path d="M130 96v30" stroke="#0b0e17" opacity=".4"/>'}
+else if(n=="The Unity Government"){o+=chairG(18,40,.4,0,"#e0584f")+chairG(162,40,.4,0,"#7bd88f")+chairG(80,14,.5)+'<path d="M58 124Q130 140 202 124" stroke="currentColor" stroke-opacity=".5" stroke-width="3" fill="none"/>'}
+else if(n=="The Headline"){o+='<g transform="rotate(-8 130 80)"><rect x="40" y="20" width="180" height="120" rx="4" fill="#e9e3d3" opacity=".9"/><rect x="52" y="30" width="156" height="14" fill="#1b1420" opacity=".8"/>';for(k=0;k<6;k++)o+='<rect x="52" y="'+(56+k*12)+'" width="'+(70+(k%3)*24)+'" height="4" fill="#1b1420" opacity=".4"/>';o+='</g>'+chairG(96,30,.4)+'<path d="M214 22l4 12 12 4-12 4-4 12-4-12-12-4 12-4z" fill="#fff" opacity=".9"/>'}
+else if(n=="The Chair Keeper"){o+='<rect x="70" y="6" width="120" height="6" rx="3" fill="currentColor"/>';[[84,106],[112,116],[148,144],[176,154]].forEach(function(p){o+='<line x1="'+p[0]+'" y1="12" x2="'+p[1]+'" y2="58" stroke="currentColor" stroke-opacity=".6"/>'});o+=chairG(88,44,.42,0,"#b97d1c")}
+else if(n=="Survivor"){o+=chairG(80,24,.5,10)+'<path d="M126 40l-8 20 10 10-8 22" stroke="#0b0e17" stroke-width="3" fill="none"/><rect x="104" y="78" width="40" height="9" rx="3" fill="#e8c4a0" opacity=".9" transform="rotate(10 124 82)"/>'}
+else if(n=="The Honest Loss"){o+='<path d="M130 4L80 150H180Z" fill="currentColor" opacity=".1"/>'+chairG(80,26,.5);for(k=0;k<18;k++)o+='<line x1="'+((k*47)%260)+'" y1="'+((k*29)%120)+'" x2="'+(((k*47)%260)-4)+'" y2="'+(((k*29)%120)+14)+'" stroke="currentColor" stroke-opacity=".3"/>'}
+else{o+=chairG(30,26,.5)+'<text x="196" y="94" font-size="54" font-weight="800" text-anchor="middle" fill="currentColor" font-family="Fraunces,Georgia,serif">−'+n.replace(/\D/g,"")+'</text><text x="196" y="118" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7" letter-spacing="3">VOTES</text>'}
+return o+'</svg>'}
+function openMenu(){if(CH&&CH.t){toast("No pausing mid-decision.","#e8a43a");return}
+var r="";if(S){[["dev","Dev","Dev Rao"],["naina","Naina","Naina Bose"],["kabir","Kabir","Kabir"],["lata","Lata","Lata"],["vik","Vikram","Vikram Sethi"]].forEach(function(a){var v=S[a[0]]||0,pc=Math.round((Math.max(-3,Math.min(3,v))+3)/6*100);r+='<div class="rr"><span style="color:'+CL[a[1]]+'">'+a[2]+'</span><i><b style="width:'+pc+'%;background:'+(v<0?"#e0584f":CL[a[1]])+'"></b></i><em>'+lab(v)+'</em></div>'});
+var ig=S.integ||0;r+='<div class="rr"><span>Integrity</span><i><b style="width:'+Math.round(Math.max(0,Math.min(1,(ig+6)/14))*100)+'%;background:#e8a43a"></b></i><em>'+(ig>=4?"Principled":ig>=1?"Steady":ig>=-1?"Wavering":"Compromised")+'</em></div>'}
+$("rels").innerHTML=r||'<div class="mu">Start the story to see how people feel about you.</div>';
+["mu","sf","ty"].forEach(function(k){$("v_"+k).value=Math.round(VOL[k]*100)});
+$("menu").style.display="flex";paused=1;A.click()}
+function closeMenu(){$("menu").style.display="none";paused=0}
+function intro(){size();addEventListener("resize",size);dr();var c=$("card");c.className="big";c.style.display="flex";busy=1;
+var sv0=ld(SK),en=ld(EK)||[],pips="";for(var i=0;i<8;i++)pips+='<i class="'+(i<en.length?"on":"")+'"></i>';
+c.innerHTML='<div class="emb">'+chairSvg()+'</div><h1 class="logo">KURSI</h1><div class="sub">The Night Before</div><p>One night. One chair. Every choice has a price.</p><p class="mu">Best with sound on. Tap, click or press Space to continue. Press 1–3 to choose. Some choices are timed.</p>'+(sv0?'<button class="go" id="ct">Continue</button><button class="go ghost" id="bg2">New game</button>':'<button class="go" id="bg2">Begin</button>')+'<div class="pips">'+pips+'</div><div class="ckick">Endings found: '+en.length+' / 8 · progress saves in this browser</div>';
+if(sv0)$("ct").onclick=function(){A.init();A.click();busy=0;RES=sv0;start()};
+$("bg2").onclick=function(){A.init();A.click();busy=0;RES=null;rm(SK);start()};
+$("mt").onclick=function(){$("mt").textContent=A.tog()?"♪ Sound on":"♪ Sound off"}}
+$("mn").onclick=openMenu;$("rsm").onclick=function(){A.click();closeMenu()};$("rst").onclick=function(){location.reload()};
+["mu","sf","ty"].forEach(function(k){$("v_"+k).oninput=function(){VOL[k]=this.value/100;A.setVol(k,VOL[k]);sv("kursi_vol_v1",VOL)}});
+intro();
+</script></body></html>
