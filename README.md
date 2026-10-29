@@ -6,12 +6,16 @@ A single-file, browser-based political drama / interactive story. It is 2:14 AM,
 
 No installs, no build step, no dependencies. Just one `kursi-game.html` file.
 
+### 🎮 [Play it live here](https://bitter-fire-505.linkyhost.com)
+
 ## Play
+
+**Online:** open **https://bitter-fire-505.linkyhost.com** in any modern browser, on desktop or mobile.
 
 **Locally:** download `kursi-game.html` and open it in any modern browser.
 
-**On GitHub Pages:**
-1. Rename `kursi-game.html` to `index.html` (or keep the name and link to it directly).
+**Host it yourself (e.g. GitHub Pages):**
+1. Rename `kursi-game.html` to `index.html`.
 2. Go to **Settings → Pages**, choose your branch and `/ (root)`, and save.
 3. Your game will be live at `https://<your-username>.github.io/<repo-name>/`.
 
